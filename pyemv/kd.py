@@ -4,6 +4,7 @@ ICC Master Keys and ICC Session Keys.
 
 import binascii as _binascii
 import hashlib as _hashlib
+from typing import Union
 
 from pyemv.tools import adjust_key_parity as _adjust_key_parity
 from pyemv.tools import encrypt_tdes_ecb as _encrypt_tdes_ecb
@@ -109,7 +110,7 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
 
     For further details see also:
         - EMV 4.3 Book 2 Annex A 1.4 Master Key Derivation
-        - EMV 4.3 Book 2 Annex A 1.4.1 Option B
+        - EMV 4.3 Book 2 Annex A 1.4.2 Option B
 
     Examples
     --------
@@ -129,31 +130,31 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
     # Data A must be an even number of digits,
     # right-justified, zero-padded from the left.
     if len(pan) % 2:
-        data_a = _binascii.a2b_hex(b"0" + pan + psn)
+        pan_psn = _binascii.a2b_hex(b"0" + pan + psn)
     else:
-        data_a = _binascii.a2b_hex(pan + psn)
+        pan_psn = _binascii.a2b_hex(pan + psn)
 
     # Hash PAN || PAN sequence
-    d = _hashlib.sha1(data_a).hexdigest()
+    digest = _hashlib.sha1(pan_psn).hexdigest()
 
     # Get first 16 digits out the hash value.
-    data_a = "".join(filter(str.isdigit, d))[:16]
+    result = "".join(filter(str.isdigit, digest))[:16]
 
     # If there are not enough digits, substitute
     # letters using the following decimalization table:
     # Input a b c d e f
     # Table 0 1 2 3 4 5
-    if len(data_a) < 16:
-        d = "".join(filter((lambda x: x in ("abcdef")), d))
-        d = d.replace("a", "0")
-        d = d.replace("b", "1")
-        d = d.replace("c", "2")
-        d = d.replace("d", "3")
-        d = d.replace("e", "4")
-        d = d.replace("f", "5")
-        data_a = data_a + d[: 16 - len(data_a)]
+    if len(result) < 16:
+        digest = "".join(filter((lambda x: x in ("abcdef")), digest))
+        digest = digest.replace("a", "0")
+        digest = digest.replace("b", "1")
+        digest = digest.replace("c", "2")
+        digest = digest.replace("d", "3")
+        digest = digest.replace("e", "4")
+        digest = digest.replace("f", "5")
+        result = result + digest[: 16 - len(result)]
 
-    data_a = _binascii.a2b_hex(data_a)
+    data_a = _binascii.a2b_hex(result)
 
     # Data B is inverted data A
     data_b = _xor(data_a, b"\xFF" * len(data_a))
@@ -163,7 +164,7 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
     return _adjust_key_parity(icc_mk)
 
 
-def derive_common_sk(icc_mk: bytes, r: bytes or bytearray) -> bytes:
+def derive_common_sk(icc_mk: bytes, r: Union[bytes, bytearray]) -> bytes:
     r"""EMV Common Session Key Derivation
 
     Parameters

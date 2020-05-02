@@ -15,11 +15,12 @@ Install::
 
 PyEMV consists of the following modules:
 
-    - `pyemv.ac` - Application Cryptogram support for ARQC, AAC, TC, and
+    - ``kd`` - Key Derivation support for ICC master keys and session keys
+    - ``ac`` - Application Cryptogram support for ARQC, AAC, TC, and
       ARPC
-    - `pyemv.sm` - Secure Messaging support for script command integrity
-      and confidentiality. It also provides support for PIN blocks. 
-    - `pyemv.kd` - Key Derivation support for ICC master keys and session keys
+    - ``sm`` - Secure Messaging support for script command integrity
+      and confidentiality. It also provides support for PIN blocks.
+    - ``cvn`` - Putting it all together for various Cryptogram Version Numbers
 
 Key Derivation
 ~~~~~~~~~~~~~~
@@ -100,6 +101,56 @@ Secure Messaging Confidentiality:
     ...                                    sm.EncryptionType.EMV)
     >>> enc_data.hex().upper()
     '5A862D1381CCB94822CFDD706A376178'
+
+Cryptogram Version Number
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Cryptogram Version Number (CVN) module demonstrates how
+application cryptogram generation, key derivation and secure messaging
+come together.
+
+.. code-block:: python
+
+    >>> from pyemv import cvn
+    >>> cvn18 = cvn.VisaCVN18(
+    ...     iss_mk_ac=bytes.fromhex('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
+    ...     iss_mk_smi=bytes.fromhex('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
+    ...     iss_mk_smc=bytes.fromhex('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC'),
+    ...     pan=b'1234567890123456',
+    ...     psn=b'00')
+    >>> atc = bytes.fromhex('0FFF')
+    >>> arqc = cvn18.generate_ac(
+    ...     tag_9f02=bytes.fromhex('000000009999'),
+    ...     tag_9f03=bytes.fromhex('000000000000'),
+    ...     tag_9f1a=bytes.fromhex('0840'),
+    ...     tag_95=bytes.fromhex('8000048000'),
+    ...     tag_5f2a=bytes.fromhex('0840'),
+    ...     tag_9a=bytes.fromhex('991231'),
+    ...     tag_9c=bytes.fromhex('01'),
+    ...     tag_9f37=bytes.fromhex('52BF4585'),
+    ...     tag_82=bytes.fromhex('1800'),
+    ...     tag_9f36=atc,
+    ...     tag_9f10=bytes.fromhex('06011203A0B800'))
+    >>> arqc.hex().upper()
+    '769577B5ABE9FE62'
+    >>> arpc = cvn18.generate_arpc(
+    ...     tag_9f26=arqc,
+    ...     tag_9f36=atc,
+    ...     csu=bytes.fromhex('00000000'))
+    >>> arpc.hex().upper()
+    '76503F48'
+    >>> command_mac = cvn18.generate_command_mac(
+    ...         command_header=bytes.fromhex('8418000008'),
+    ...         tag_9f26=arqc,
+    ...         tag_9f36=atc)
+    >>> command_mac.hex().upper()
+    'B5CB29759F9C3919'
+    >>> pin_command = cvn18.generate_pin_change_command(
+    ...         pin=b'9999',
+    ...         tag_9f26=arqc,
+    ...         tag_9f36=atc)
+    >>> pin_command.hex().upper()
+    '84240002182DC7A061323BA62472BC5308BD291B5F665B3A927E60661E'
 
 Contribute
 ----------

@@ -9,6 +9,7 @@ from cryptography.hazmat.primitives.ciphers import modes as _modes
 __all__ = [
     "xor",
     "odd_parity",
+    "adjust_key_parity",
     "key_check_digits",
     "encrypt_tdes_cbc",
     "encrypt_tdes_ecb",
@@ -68,12 +69,12 @@ def adjust_key_parity(key: Union[bytes, bytearray]) -> bytes:
     Parameters
     ----------
     key : bytes, bytearray
-        Binary key to provide check digits for. Has to be a valid DES key.
+        Binary key to adjust for odd parity.
 
     Returns
     -------
     adjusted_key : bytes
-        Binary key to provide check digits for. Has to be a valid DES key.
+        Binary key adjusted for odd parity.
 
     Examples
     --------

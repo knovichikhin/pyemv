@@ -29,7 +29,7 @@ if __name__ == "__main__":
         long_description=readme,
         long_description_content_type="text/x-rst",
         license="MIT",
-        url="https://github.com/manoutoftime/pyemv",
+        url="https://github.com/knovichikhin/pyemv",
         packages=find_packages(exclude=["tests"]),
         install_requires=["cryptography >= 2.8",],
         classifiers=classifiers,

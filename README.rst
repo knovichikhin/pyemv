@@ -155,7 +155,7 @@ come together.
 Contribute
 ----------
 
-`PyEMV` is hosted on `GitHub <https://github.com/manoutoftime/pyemv>`_.
+`PyEMV` is hosted on `GitHub <https://github.com/knovichikhin/pyemv>`_.
 
 Feel free to fork and send contributions over.
 
@@ -163,6 +163,6 @@ Feel free to fork and send contributions over.
     :alt: PyPI
     :target:  https://pypi.org/project/pyemv/
 
-.. |coverage| image:: https://codecov.io/gh/manoutoftime/pyemv/branch/master/graph/badge.svg
+.. |coverage| image:: https://codecov.io/gh/knovichikhin/pyemv/branch/master/graph/badge.svg
     :alt: Test coverage
-    :target: https://codecov.io/gh/manoutoftime/pyemv
+    :target: https://codecov.io/gh/knovichikhin/pyemv

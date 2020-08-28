@@ -31,7 +31,11 @@ if __name__ == "__main__":
         license="MIT",
         url="https://github.com/knovichikhin/pyemv",
         packages=find_packages(exclude=["tests"]),
-        install_requires=["cryptography >= 2.8",],
+        package_data={"pyemv": ["py.typed"]},
+        zip_safe=False,
+        install_requires=[
+            "cryptography >= 2.8",
+        ],
         classifiers=classifiers,
         python_requires=">=3.5",
         keywords="emv arqc arpc",

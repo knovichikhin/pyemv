@@ -128,5 +128,5 @@ come together.
     '84240002182DC7A061323BA62472BC5308BD291B5F665B3A927E60661E'
 """
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __author__ = "Konstantin Novichikhin <konstantin.novichikhin@gmail.com>"

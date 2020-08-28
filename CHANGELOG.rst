@@ -1,3 +1,9 @@
+1.2.0 - 2020-08-27
+------------------
+- Added CVN support for MasterCard CVN 16, 17, 20 and 21.
+- Addressed remaining type hint issues.
+- Included inline type information into the distribution according to `PEP 561 <https://www.python.org/dev/peps/pep-0561/>`_.
+
 1.1.0 - 2020-05-01
 ------------------
 Added ``pyemv.cvn`` module.

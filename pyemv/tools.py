@@ -147,7 +147,9 @@ def encrypt_tdes_cbc(key: bytes, iv: bytes, data: bytes) -> bytes:
     '41D2FFBA3CDC15FE'
     """
     cipher = _Cipher(
-        _algorithms.TripleDES(key), _modes.CBC(iv), backend=_default_backend(),
+        _algorithms.TripleDES(key),
+        _modes.CBC(iv),
+        backend=_default_backend(),
     )
     return cipher.encryptor().update(data)
 

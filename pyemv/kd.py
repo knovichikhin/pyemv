@@ -4,7 +4,7 @@ ICC Master Keys and ICC Session Keys.
 
 import binascii as _binascii
 import hashlib as _hashlib
-from typing import Union
+from typing import Optional, Union
 
 from pyemv.tools import adjust_key_parity as _adjust_key_parity
 from pyemv.tools import encrypt_tdes_ecb as _encrypt_tdes_ecb
@@ -18,7 +18,7 @@ __all__ = [
 ]
 
 
-def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
+def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> bytes:
     r"""ICC Master Key Derivation. EMV Option A.
     Uses PAN, PAN Sequence Number, MK ISS, Triple DES.
 
@@ -76,7 +76,7 @@ def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
     return _adjust_key_parity(icc_mk)
 
 
-def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: bytes = None) -> bytes:
+def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> bytes:
     r"""ICC Master Key Derivation. EMV Option B.
     Uses PAN, PAN Sequence Number, MK ISS, Triple DES, SHA-1 and
     decimalisation of hex digits.

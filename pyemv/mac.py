@@ -1,3 +1,5 @@
+from typing import Optional
+
 from cryptography.hazmat.backends import default_backend as _default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher as _Cipher
 from cryptography.hazmat.primitives.ciphers import algorithms as _algorithms
@@ -12,7 +14,7 @@ __all__ = [
 
 
 def mac_iso9797_3(
-    key1: bytes, key2: bytes, data: bytes, padding: int, length: int = None
+    key1: bytes, key2: bytes, data: bytes, padding: int, length: Optional[int] = None
 ) -> bytes:
     r"""ISO/IEC 9797-1 MAC algorithm 3. Requires two independent keys.
     Only the last data block is processed using TDES,
@@ -98,7 +100,7 @@ def mac_iso9797_3(
     return encryptor1.update(decryptor2.update(data))[:length]
 
 
-def pad_iso9797_1(data: bytes, block_size: int = None) -> bytes:
+def pad_iso9797_1(data: bytes, block_size: Optional[int] = None) -> bytes:
     r"""ISO/IEC 9797-1 padding method 1.
     Add the smallest number of "0x00" bytes to the right
     such that the length of resulting message is a multiple of
@@ -141,7 +143,7 @@ def pad_iso9797_1(data: bytes, block_size: int = None) -> bytes:
     return data
 
 
-def pad_iso9797_2(data: bytes, block_size: int = None) -> bytes:
+def pad_iso9797_2(data: bytes, block_size: Optional[int] = None) -> bytes:
     r"""ISO/IEC 9797-1 padding method 2 (equivalent to ISO/IEC 7816-4).
     Add a mandatory "0x80" byte to the right of data,
     and then add the smallest number of "0x00" bytes to the right
@@ -177,7 +179,7 @@ def pad_iso9797_2(data: bytes, block_size: int = None) -> bytes:
     return pad_iso9797_1(data + b"\x80", block_size)
 
 
-def pad_iso9797_3(data: bytes, block_size: int = None) -> bytes:
+def pad_iso9797_3(data: bytes, block_size: Optional[int] = None) -> bytes:
     r"""ISO/IEC 9797-1 padding method 3.
     The padded data comprises (in this order):
         - The length of the unpadded data (in bits) expressed

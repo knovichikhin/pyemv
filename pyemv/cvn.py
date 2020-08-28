@@ -11,6 +11,9 @@
 
 """
 
+
+from typing import Optional
+
 from pyemv import ac as _ac
 from pyemv import kd as _kd
 from pyemv import sm as _sm
@@ -62,7 +65,7 @@ class VisaCVN10(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -249,7 +252,11 @@ class VisaCVN10(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes, current_pin: bytes = None
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
+        current_pin: Optional[bytes] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -334,7 +341,7 @@ class VisaCVN18(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option B.
@@ -430,7 +437,7 @@ class VisaCVN18(object):
         tag_9f26: bytes,
         tag_9f36: bytes,
         csu: bytes,
-        proprietary_auth_data: bytes = None,
+        proprietary_auth_data: Optional[bytes] = None,
     ) -> bytes:
         """Generate Authorisation Response Cryptogram (ARPC) using method 2.
         Method for the generation of a 4-byte ARPC consists of applying
@@ -460,7 +467,10 @@ class VisaCVN18(object):
                 91 || Len || ARPC || CSU || { Proprietary Authentication Data }
         """
         return _ac.generate_arpc_2(
-            self._derive_sk_ac_common(tag_9f36), tag_9f26, csu, proprietary_auth_data,
+            self._derive_sk_ac_common(tag_9f36),
+            tag_9f26,
+            csu,
+            proprietary_auth_data,
         )
 
     def _derive_sk_sm_visa(self, icc_mk_sm: bytes, tag_9f36: bytes) -> bytes:
@@ -538,7 +548,11 @@ class VisaCVN18(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes, current_pin: bytes = None
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
+        current_pin: Optional[bytes] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -624,7 +638,7 @@ class InteracCVN133(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -718,7 +732,11 @@ class InteracCVN133(object):
         )
 
     def generate_arpc(
-        self, tag_9f26: bytes, tag_9f37: bytes, tag_9f36: bytes, arpc_rc: bytes,
+        self,
+        tag_9f26: bytes,
+        tag_9f37: bytes,
+        tag_9f36: bytes,
+        arpc_rc: bytes,
     ) -> bytes:
         """Generate Authorisation Response Cryptogram (ARPC) using method 1.
         Method for the generation of a 8-byte ARPC consists of applying
@@ -747,7 +765,9 @@ class InteracCVN133(object):
                 91 || Len || ARPC || ARPC-RC
         """
         return _ac.generate_arpc_1(
-            self._derive_sk_ac_mastercard(tag_9f36, tag_9f37), tag_9f26, arpc_rc,
+            self._derive_sk_ac_mastercard(tag_9f36, tag_9f37),
+            tag_9f26,
+            arpc_rc,
         )
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
@@ -770,7 +790,10 @@ class InteracCVN133(object):
         return _kd.derive_common_sk(icc_mk_sm, tag_9f26)
 
     def generate_command_mac(
-        self, command_header: bytes, tag_9f26: bytes, command_data: bytes = b"",
+        self,
+        command_header: bytes,
+        tag_9f26: bytes,
+        command_data: bytes = b"",
     ) -> bytes:
         r"""Message Authentication Code (MAC) for Secure Messaging Integrity
 
@@ -898,7 +921,7 @@ class MasterCardCVN16(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1114,7 +1137,10 @@ class MasterCardCVN16(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes,
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
     ) -> bytes:
         r"""Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -1204,7 +1230,7 @@ class MasterCardCVN17(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1431,7 +1457,10 @@ class MasterCardCVN17(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes,
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
     ) -> bytes:
         r"""Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -1521,7 +1550,7 @@ class MasterCardCVN20(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1727,7 +1756,10 @@ class MasterCardCVN20(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes,
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
     ) -> bytes:
         r"""Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -1817,7 +1849,7 @@ class MasterCardCVN21(object):
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
         pan: bytes,
-        psn: bytes = None,
+        psn: Optional[bytes] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -2034,7 +2066,10 @@ class MasterCardCVN21(object):
         )
 
     def generate_pin_change_command(
-        self, pin: bytes, tag_9f26: bytes, tag_9f36: bytes,
+        self,
+        pin: bytes,
+        tag_9f26: bytes,
+        tag_9f36: bytes,
     ) -> bytes:
         r"""Generate a PIN change command with encrypted PIN block and MAC.
 

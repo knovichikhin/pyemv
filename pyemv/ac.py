@@ -5,6 +5,7 @@ issuer and verified by the ICC.
 """
 
 from enum import Enum as _Enum
+from typing import Optional
 
 from pyemv.mac import mac_iso9797_3 as _mac_iso9797_3
 from pyemv.tools import encrypt_tdes_cbc as _encrypt_tdes_cbc
@@ -24,7 +25,10 @@ class PaddingType(_Enum):
 
 
 def generate_ac(
-    sk_ac: bytes, data: bytes, padding_type: PaddingType = None, length: int = None
+    sk_ac: bytes,
+    data: bytes,
+    padding_type: Optional[PaddingType] = None,
+    length: Optional[int] = None,
 ) -> bytes:
     r"""First and second AC Generation using 8-byte block chiper
     Triple DES with ISO/IEC 9797-1 Algorithm 3. Same process for
@@ -207,7 +211,7 @@ def generate_arpc_1(sk_ac: bytes, arqc: bytes, arpc_rc: bytes) -> bytes:
 
 
 def generate_arpc_2(
-    sk_ac: bytes, arqc: bytes, csu: bytes, prop_auth_data: bytes = None
+    sk_ac: bytes, arqc: bytes, csu: bytes, prop_auth_data: Optional[bytes] = None
 ) -> bytes:
     r"""Generate Authorisation Response Cryptogram (ARPC) using method 2.
     Method for the generation of a 4-byte ARPC consists of applying

@@ -6,7 +6,8 @@ from pyemv import mac
 def test_mac_iso9797_3():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="pecify valid padding method: 1, 2 or 3.",
+        ValueError,
+        match="pecify valid padding method: 1, 2 or 3.",
     ):
         mac.mac_iso9797_3(
             bytes.fromhex("AAAAAAAAAAAAAAAA"),

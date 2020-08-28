@@ -6,7 +6,8 @@ from pyemv import ac
 def test_generate_ac_exception():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_ac(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAA"),
@@ -15,7 +16,8 @@ def test_generate_ac_exception():
 
     # SK > 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_ac(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -24,7 +26,8 @@ def test_generate_ac_exception():
 
     # Invalid padding type
     with pytest.raises(
-        TypeError, match="Padding type must be PaddingType Enum, not dict",
+        TypeError,
+        match="Padding type must be PaddingType Enum, not dict",
     ):
         ac.generate_ac(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -36,7 +39,8 @@ def test_generate_ac_exception():
 def test_generate_arpc_1_exception():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAA"),
@@ -46,7 +50,8 @@ def test_generate_arpc_1_exception():
 
     # SK > 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -56,7 +61,8 @@ def test_generate_arpc_1_exception():
 
     # ARQC < 8 bytes
     with pytest.raises(
-        ValueError, match="ARQC must be 8 bytes long",
+        ValueError,
+        match="ARQC must be 8 bytes long",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -66,7 +72,8 @@ def test_generate_arpc_1_exception():
 
     # ARQC > 16 bytes
     with pytest.raises(
-        ValueError, match="ARQC must be 8 bytes long",
+        ValueError,
+        match="ARQC must be 8 bytes long",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -76,7 +83,8 @@ def test_generate_arpc_1_exception():
 
     # ARPC-RC < 2 bytes
     with pytest.raises(
-        ValueError, match="ARPC-RC must be 2 bytes long",
+        ValueError,
+        match="ARPC-RC must be 2 bytes long",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -86,7 +94,8 @@ def test_generate_arpc_1_exception():
 
     # ARPC-RC > 2 bytes
     with pytest.raises(
-        ValueError, match="ARPC-RC must be 2 bytes long",
+        ValueError,
+        match="ARPC-RC must be 2 bytes long",
     ):
         ac.generate_arpc_1(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -98,7 +107,8 @@ def test_generate_arpc_1_exception():
 def test_generate_arpc_2_exception():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAA"),
@@ -109,7 +119,8 @@ def test_generate_arpc_2_exception():
 
     # SK > 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -120,7 +131,8 @@ def test_generate_arpc_2_exception():
 
     # ARQC < 8 bytes
     with pytest.raises(
-        ValueError, match="ARQC must be 8 bytes long",
+        ValueError,
+        match="ARQC must be 8 bytes long",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -131,7 +143,8 @@ def test_generate_arpc_2_exception():
 
     # ARQC > 16 bytes
     with pytest.raises(
-        ValueError, match="ARQC must be 8 bytes long",
+        ValueError,
+        match="ARQC must be 8 bytes long",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -142,7 +155,8 @@ def test_generate_arpc_2_exception():
 
     # CSU < 4 bytes
     with pytest.raises(
-        ValueError, match="CSU must be 4 bytes long",
+        ValueError,
+        match="CSU must be 4 bytes long",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -153,7 +167,8 @@ def test_generate_arpc_2_exception():
 
     # CSU > 4 bytes
     with pytest.raises(
-        ValueError, match="CSU must be 4 bytes long",
+        ValueError,
+        match="CSU must be 4 bytes long",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -164,7 +179,8 @@ def test_generate_arpc_2_exception():
 
     # PAD > 8 bytes
     with pytest.raises(
-        ValueError, match="Proprietary Authentication Data must be 0-8 bytes long",
+        ValueError,
+        match="Proprietary Authentication Data must be 0-8 bytes long",
     ):
         ac.generate_arpc_2(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),

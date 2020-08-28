@@ -6,7 +6,8 @@ from pyemv import sm
 def test_generate_command_mac_exception():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         sm.generate_command_mac(
             sk_smi=bytes.fromhex("AAAAAAAAAAAAAAAA"),
@@ -15,7 +16,8 @@ def test_generate_command_mac_exception():
 
     # SK > 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         sm.generate_command_mac(
             sk_smi=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -26,7 +28,8 @@ def test_generate_command_mac_exception():
 def test_encrypt_command_data_exception():
     # SK < 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         sm.encrypt_command_data(
             sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAA"),
@@ -36,7 +39,8 @@ def test_encrypt_command_data_exception():
 
     # SK > 16 bytes
     with pytest.raises(
-        ValueError, match="Session Key must be a double length DES key",
+        ValueError,
+        match="Session Key must be a double length DES key",
     ):
         sm.encrypt_command_data(
             sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -46,7 +50,8 @@ def test_encrypt_command_data_exception():
 
     # Invalid encryption type
     with pytest.raises(
-        TypeError, match="Encryption type must be EncryptionType Enum, not dict",
+        TypeError,
+        match="Encryption type must be EncryptionType Enum, not dict",
     ):
         sm.encrypt_command_data(
             sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -58,15 +63,18 @@ def test_encrypt_command_data_exception():
 def test_format_vis_pin_block_exception():
     # PIN < 4 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_vis_pin_block(
-            icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"), pin=b"123",
+            icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
+            pin=b"123",
         )
 
     # PIN > 12 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_vis_pin_block(
             icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -75,15 +83,18 @@ def test_format_vis_pin_block_exception():
 
     # ICC MK AC < 16 bytes
     with pytest.raises(
-        ValueError, match="ICC Master Key for AC must be a double length DES key",
+        ValueError,
+        match="ICC Master Key for AC must be a double length DES key",
     ):
         sm.format_vis_pin_block(
-            icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAA"), pin=b"123456789012",
+            icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAA"),
+            pin=b"123456789012",
         )
 
     # ICC MK AC > 16 bytes
     with pytest.raises(
-        ValueError, match="ICC Master Key for AC must be a double length DES key",
+        ValueError,
+        match="ICC Master Key for AC must be a double length DES key",
     ):
         sm.format_vis_pin_block(
             icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBBCCCCCCCCCCCCCCCC"),
@@ -92,7 +103,8 @@ def test_format_vis_pin_block_exception():
 
     # Current PIN < 4 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_vis_pin_block(
             icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -102,7 +114,8 @@ def test_format_vis_pin_block_exception():
 
     # Current PIN > 12 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_vis_pin_block(
             icc_mk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
@@ -114,12 +127,14 @@ def test_format_vis_pin_block_exception():
 def test_format_iso9564_2_pin_block_exception():
     # PIN < 4 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_iso9564_2_pin_block(pin=b"123")
 
     # PIN > 12 bytes
     with pytest.raises(
-        ValueError, match="PIN must be between 4 and 12 digits long",
+        ValueError,
+        match="PIN must be between 4 and 12 digits long",
     ):
         sm.format_iso9564_2_pin_block(pin=b"1234567890123")

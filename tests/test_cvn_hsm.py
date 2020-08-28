@@ -3,8 +3,7 @@ from pyemv.tools import key_check_digits
 
 
 def test_visa_cvn10():
-    """Visa CVN 10
-    """
+    """Visa CVN 10"""
     cvn10 = cvn.VisaCVN10(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -43,7 +42,9 @@ def test_visa_cvn10():
 
     # MAC application unblock command and its session key
     mac = cvn10.generate_command_mac(
-        bytes.fromhex("8418000008"), tag_9f26=arqc, tag_9f36=atc,
+        bytes.fromhex("8418000008"),
+        tag_9f26=arqc,
+        tag_9f36=atc,
     )
     assert mac.hex().upper() == "DB56BA60087CEFD3"
     assert (
@@ -87,8 +88,7 @@ def test_visa_cvn10():
 
 
 def test_visa_cvn18():
-    """Visa CVN 18
-    """
+    """Visa CVN 18"""
     cvn18 = cvn.VisaCVN18(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -129,7 +129,9 @@ def test_visa_cvn18():
 
     # MAC application unblock command and its session key
     mac = cvn18.generate_command_mac(
-        bytes.fromhex("8418000008"), tag_9f26=arqc, tag_9f36=atc,
+        bytes.fromhex("8418000008"),
+        tag_9f26=arqc,
+        tag_9f36=atc,
     )
     assert mac.hex().upper() == "04EDE90BC24CC35E"
     assert (
@@ -173,8 +175,7 @@ def test_visa_cvn18():
 
 
 def test_interac_cvn133():
-    """Interac CVN 133
-    """
+    """Interac CVN 133"""
     cvn133 = cvn.InteracCVN133(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -248,8 +249,7 @@ def test_interac_cvn133():
 
 
 def test_mastercard_cvn16():
-    """MasterCard CVN 16
-    """
+    """MasterCard CVN 16"""
     cvn16 = cvn.MasterCardCVN16(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -324,8 +324,7 @@ def test_mastercard_cvn16():
 
 
 def test_mastercard_cvn17():
-    """MasterCard CVN 17
-    """
+    """MasterCard CVN 17"""
     cvn17 = cvn.MasterCardCVN17(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -402,8 +401,7 @@ def test_mastercard_cvn17():
 
 
 def test_mastercard_cvn20():
-    """MasterCard CVN 20
-    """
+    """MasterCard CVN 20"""
     cvn20 = cvn.MasterCardCVN20(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
@@ -477,8 +475,7 @@ def test_mastercard_cvn20():
 
 
 def test_mastercard_cvn21():
-    """MasterCard CVN 21
-    """
+    """MasterCard CVN 21"""
     cvn21 = cvn.MasterCardCVN21(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),

@@ -8,3 +8,4 @@ twine
 wheel
 sphinx
 sphinx-rtd-theme
+mypy

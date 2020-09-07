@@ -146,12 +146,7 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     # Table 0 1 2 3 4 5
     if len(result) < 16:
         digest = "".join(filter((lambda x: x in ("abcdef")), digest))
-        digest = digest.replace("a", "0")
-        digest = digest.replace("b", "1")
-        digest = digest.replace("c", "2")
-        digest = digest.replace("d", "3")
-        digest = digest.replace("e", "4")
-        digest = digest.replace("f", "5")
+        digest = digest.translate({97: 48, 98: 49, 99: 50, 100: 51, 101: 52, 102: 53})
         result = result + digest[: 16 - len(result)]
 
     data_a = _binascii.a2b_hex(result)

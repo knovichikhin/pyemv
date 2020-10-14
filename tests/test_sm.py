@@ -25,6 +25,28 @@ def test_generate_command_mac_exception():
         )
 
 
+def test_encrypt_command_data_mastercard_nonpadded():
+    # If MasterCard data is not multiple of 8 bytes
+    # then it has to be padded with 0x80 and 0x00 until
+    # it is multiple of 8 bytes.
+    # if the data is multiple of 8 bytes then no padding
+    # is required.
+
+    no_padding_required = sm.encrypt_command_data(
+        sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
+        command_data=bytes.fromhex("1234800000000000"),
+        encryption_type=sm.EncryptionType.MASTERCARD,
+    )
+
+    padding_required = sm.encrypt_command_data(
+        sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
+        command_data=bytes.fromhex("1234"),
+        encryption_type=sm.EncryptionType.MASTERCARD,
+    )
+
+    assert no_padding_required == padding_required
+
+
 def test_encrypt_command_data_exception():
     # SK < 16 bytes
     with pytest.raises(

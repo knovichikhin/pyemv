@@ -5,9 +5,9 @@ PyEMV
 
 PyEMV package provides methods to generate
 
-    - Application Cryptograms (TC, ARQC, or AAC) used to verify ICC
-    - Authorization Response Cryptogram (ARPC) used to verify card issuer
-    - Secure Messaging Integrity and Confidentiality used by the issuer to update values on the ICC
+    - Application Cryptograms (TC, ARQC, or AAC) that's used to verify ICC
+    - Authorization Response Cryptogram (ARPC) that's used to verify card issuer
+    - Secure Messaging Integrity and Confidentiality that's used by the issuer to update values on the ICC
     - Dynamic Card Verification Values
 
 PyEMV is built on top of `cryptography <https://pypi.org/project/cryptography/>`_ package.

@@ -7,7 +7,7 @@ using encipherment of the data field.
 import binascii as _binascii
 import sys as _sys
 from enum import Enum as _Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pyemv import mac as _mac
 from pyemv import tools as _tools
@@ -197,7 +197,9 @@ def encrypt_command_data(
 
 
 def format_vis_pin_block(
-    icc_mk_ac: bytes, pin: bytes, current_pin: Optional[bytes] = None
+    icc_mk_ac: bytes,
+    pin: Union[bytes, str],
+    current_pin: Optional[Union[bytes, str]] = None,
 ) -> bytes:
     r"""Format VIS PIN block with or without the current PIN.
 
@@ -206,9 +208,9 @@ def format_vis_pin_block(
     icc_mk_ac : bytes
         Binary 16-byte ICC Master Key for Application Cryptogram
         Has to be a valid DES key.
-    pin : bytes
+    pin : bytes or str
         New ASCII Personal Identification Number.
-    current_pin : bytes, optional
+    current_pin : bytes or str, optional
         Current ASCII Personal Identification Number (optional). If present
         VIS PIN block is generated using current PIN.
 
@@ -228,7 +230,7 @@ def format_vis_pin_block(
     --------
     >>> from pyemv import sm
     >>> icc_mk_ac = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
-    >>> sm.format_vis_pin_block(icc_mk_ac, b"1234").hex().upper()
+    >>> sm.format_vis_pin_block(icc_mk_ac, "1234").hex().upper()
     '041234FF76543210'
     """
     if len(pin) < 4 or len(pin) > 12:
@@ -237,12 +239,18 @@ def format_vis_pin_block(
     if len(icc_mk_ac) != 16:
         raise ValueError("ICC Master Key for AC must be a double length DES key")
 
+    if isinstance(pin, bytes):
+        pin = pin.decode("ascii")
+
+    if isinstance(current_pin, bytes):
+        current_pin = current_pin.decode("ascii")
+
     # 4 right-most bytes of ICC MK AC Key A padded with 0x00 to form an 8-byte block
     block_a = b"\x00" * 4 + icc_mk_ac[4:8]
 
     # PIN length as 1 byte concatenated with PIN then F-padded to form an 8 byte block
     block_b = len(pin).to_bytes(1, _sys.byteorder) + _binascii.a2b_hex(
-        pin + b"F" * (14 - len(pin))
+        pin + "F" * (14 - len(pin))
     )
 
     pin_block = _tools.xor(block_a, block_b)
@@ -253,18 +261,18 @@ def format_vis_pin_block(
             raise ValueError("Current PIN must be between 4 and 12 digits long")
 
         pin_block = _tools.xor(
-            pin_block, _binascii.a2b_hex(current_pin + b"0" * (16 - len(current_pin)))
+            pin_block, _binascii.a2b_hex(current_pin + "0" * (16 - len(current_pin)))
         )
 
     return pin_block
 
 
-def format_iso9564_2_pin_block(pin: bytes) -> bytes:
+def format_iso9564_2_pin_block(pin: Union[bytes, str]) -> bytes:
     r"""Format ISO 9564-1 PIN block format 2.
 
     Parameters
     ----------
-    pin : bytes
+    pin : bytes or str
         New ASCII Personal Identification Number.
 
     Returns
@@ -280,12 +288,15 @@ def format_iso9564_2_pin_block(pin: bytes) -> bytes:
     Examples
     --------
     >>> from pyemv import sm
-    >>> sm.format_iso9564_2_pin_block(b"123456789012").hex().upper()
+    >>> sm.format_iso9564_2_pin_block("123456789012").hex().upper()
     '2C123456789012FF'
     """
     if len(pin) < 4 or len(pin) > 12:
         raise ValueError("PIN must be between 4 and 12 digits long")
 
+    if isinstance(pin, bytes):
+        pin = pin.decode("ascii")
+
     return (len(pin) + 32).to_bytes(1, _sys.byteorder) + _binascii.a2b_hex(
-        pin + b"F" * (14 - len(pin))
+        pin + "F" * (14 - len(pin))
     )

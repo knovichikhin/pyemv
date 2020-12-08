@@ -1,7 +1,7 @@
 from pyemv import ac, kd, tools
 
 
-def test_generate_ac_emv_arpc1():
+def test_generate_ac_emv_arpc1() -> None:
     r"""
     Test generate AC with EMV padding (\x80 padding).
 
@@ -15,8 +15,8 @@ def test_generate_ac_emv_arpc1():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key.
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 
@@ -37,7 +37,7 @@ def test_generate_ac_emv_arpc1():
     assert arpc.hex().upper() == "F8C9CECAABD55AD1"
 
 
-def test_generate_ac_default_emv_arpc1():
+def test_generate_ac_default_emv_arpc1() -> None:
     r"""
     Test generate AC with default EMV padding (\x80 padding).
 
@@ -51,8 +51,8 @@ def test_generate_ac_default_emv_arpc1():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key.
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 
@@ -73,7 +73,7 @@ def test_generate_ac_default_emv_arpc1():
     assert arpc.hex().upper() == "F8C9CECAABD55AD1"
 
 
-def test_generate_ac_visa_aprc1():
+def test_generate_ac_visa_aprc1() -> None:
     r"""
     Test generate AC with Visa padding (\x00 padding).
 
@@ -87,8 +87,8 @@ def test_generate_ac_visa_aprc1():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 
@@ -109,7 +109,7 @@ def test_generate_ac_visa_aprc1():
     assert arpc.hex().upper() == "16A49AAB314B9262"
 
 
-def test_generate_ac_visa_aprc1_no_padding_required():
+def test_generate_ac_visa_aprc1_no_padding_required() -> None:
     r"""
     Test generate AC with Visa padding (\x00 padding).
     However, no padding is required. The data is already multiple of 8.
@@ -124,8 +124,8 @@ def test_generate_ac_visa_aprc1_no_padding_required():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 
@@ -146,7 +146,7 @@ def test_generate_ac_visa_aprc1_no_padding_required():
     assert arpc.hex().upper() == "8AE6E836084B0E80"
 
 
-def test_generate_arpc2():
+def test_generate_arpc2() -> None:
     r"""
     Test generate ARPC using method 2.
 
@@ -160,8 +160,8 @@ def test_generate_arpc2():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 
@@ -183,7 +183,7 @@ def test_generate_arpc2():
     assert arpc.hex().upper() == "4962B76C"
 
 
-def test_generate_arpc2_no_prop_auth_data():
+def test_generate_arpc2_no_prop_auth_data() -> None:
     r"""
     Test generate ARPC using method 2 without prop auth data.
 
@@ -197,8 +197,8 @@ def test_generate_arpc2_no_prop_auth_data():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"9901234567890123"
-    psn = b"45"
+    pan = "9901234567890123"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "1DA5"
 

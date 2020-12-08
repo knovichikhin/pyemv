@@ -263,22 +263,22 @@ class VisaCVN10(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
-        current_pin: Optional[bytes] = None,
+        current_pin: Optional[Union[bytes, str]] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
         tag_9f36 : bytes
             Binary data from tag 9F36 (Application Transaction Counter).
-        current_pin : bytes, optional
+        current_pin : bytes or str, optional
             Current ASCII Personal Identification Number (optional). If present
             VIS PIN block is generated using current PIN.
 
@@ -559,22 +559,22 @@ class VisaCVN18(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
-        current_pin: Optional[bytes] = None,
+        current_pin: Optional[Union[bytes, str]] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
         tag_9f36 : bytes
             Binary data from tag 9F36 (Application Transaction Counter).
-        current_pin : bytes, optional
+        current_pin : bytes or str, optional
             Current ASCII Personal Identification Number (optional). If present
             VIS PIN block is generated using current PIN.
 
@@ -851,12 +851,14 @@ class InteracCVN133(object):
             _sm.EncryptionType.MASTERCARD,
         )
 
-    def generate_pin_change_command(self, pin: bytes, tag_9f26: bytes) -> bytes:
+    def generate_pin_change_command(
+        self, pin: Union[bytes, str], tag_9f26: bytes
+    ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
@@ -1148,7 +1150,7 @@ class MasterCardCVN16(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1156,7 +1158,7 @@ class MasterCardCVN16(object):
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
@@ -1468,7 +1470,7 @@ class MasterCardCVN17(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1476,7 +1478,7 @@ class MasterCardCVN17(object):
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
@@ -1767,7 +1769,7 @@ class MasterCardCVN20(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1775,7 +1777,7 @@ class MasterCardCVN20(object):
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).
@@ -2077,7 +2079,7 @@ class MasterCardCVN21(object):
 
     def generate_pin_change_command(
         self,
-        pin: bytes,
+        pin: Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -2085,7 +2087,7 @@ class MasterCardCVN21(object):
 
         Parameters
         ----------
-        pin : bytes
+        pin : bytes or str
             New ASCII Personal Identification Number.
         tag_9f26 : bytes
             Binary data from tag 9F26 (Authorisation Request Cryptogram).

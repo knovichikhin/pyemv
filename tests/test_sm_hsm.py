@@ -1,7 +1,10 @@
+from typing import Union
+
+import pytest
 from pyemv import kd, sm, tools
 
 
-def test_generate_command_mac():
+def test_generate_command_mac() -> None:
     """
     Test generation of script command data MAC
 
@@ -14,8 +17,8 @@ def test_generate_command_mac():
     assert tools.key_check_digits(iss_mk_smi, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_smi = kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
     assert tools.key_check_digits(icc_mk_smi, 2).hex().upper() == "0239"
 
@@ -31,7 +34,14 @@ def test_generate_command_mac():
     assert mac.hex().upper() == "CF323F09A0F6AB9E"
 
 
-def test_mastercard_pin_change():
+@pytest.mark.parametrize(
+    "pin",
+    [
+        b"9999",
+        "9999",
+    ],
+)
+def test_mastercard_pin_change(pin: Union[bytes, str]) -> None:
     """
     Test generation of offline PIN script with ISO format 2 PIN block
 
@@ -48,8 +58,8 @@ def test_mastercard_pin_change():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
     assert tools.key_check_digits(icc_mk_smc, 3).hex().upper() == "6B0F76"
     icc_mk_smi = kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
@@ -64,7 +74,7 @@ def test_mastercard_pin_change():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "F088F8"
 
     # Encrypt new PIN
-    pin_block = sm.format_iso9564_2_pin_block(b"9999")
+    pin_block = sm.format_iso9564_2_pin_block(pin)
     assert pin_block.hex().upper() == "249999FFFFFFFFFF"
     command_data = sm.encrypt_command_data(
         sk_smc, pin_block, sm.EncryptionType.MASTERCARD
@@ -77,7 +87,14 @@ def test_mastercard_pin_change():
     assert mac.hex().upper() == "8C4D10091A093B5B"
 
 
-def test_mastercard_pin_change_12():
+@pytest.mark.parametrize(
+    "pin",
+    [
+        b"999999999999",
+        "999999999999",
+    ],
+)
+def test_mastercard_pin_change_12(pin: Union[bytes, str]) -> None:
     """
     Test generation of offline PIN script with ISO format 2 PIN block
     PIN is 12 digits long.
@@ -95,8 +112,8 @@ def test_mastercard_pin_change_12():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
     assert tools.key_check_digits(icc_mk_smc, 3).hex().upper() == "6B0F76"
     icc_mk_smi = kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
@@ -111,7 +128,7 @@ def test_mastercard_pin_change_12():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "F088F8"
 
     # Encrypt new PIN
-    pin_block = sm.format_iso9564_2_pin_block(b"999999999999")
+    pin_block = sm.format_iso9564_2_pin_block(pin)
     assert pin_block.hex().upper() == "2C999999999999FF"
     command_data = sm.encrypt_command_data(
         sk_smc, pin_block, sm.EncryptionType.MASTERCARD
@@ -124,7 +141,14 @@ def test_mastercard_pin_change_12():
     assert mac.hex().upper() == "1471D88C6393BE21"
 
 
-def test_vis_pin_change():
+@pytest.mark.parametrize(
+    "pin",
+    [
+        b"9999",
+        "9999",
+    ],
+)
+def test_vis_pin_change(pin: Union[bytes, str]) -> None:
     """
     Test generation of offline PIN script with VIS PIN block
 
@@ -141,8 +165,8 @@ def test_vis_pin_change():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_ac = kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
     assert tools.key_check_digits(icc_mk_ac, 3).hex().upper() == "C5CACD"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -159,7 +183,7 @@ def test_vis_pin_change():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "A41D47"
 
     # Encrypt new PIN
-    pin_block = sm.format_vis_pin_block(icc_mk_ac, b"9999")
+    pin_block = sm.format_vis_pin_block(icc_mk_ac, pin)
     assert pin_block.hex().upper() == "049999FFC4B001F1"
     command_data = sm.encrypt_command_data(sk_smc, pin_block, sm.EncryptionType.VISA)
     assert command_data.hex().upper() == "D421231A6FD2F0FAEE671384F0D3A7B9"
@@ -170,7 +194,18 @@ def test_vis_pin_change():
     assert mac.hex().upper() == "F67E37E67B06AB99"
 
 
-def test_vis_change_change_current_pin():
+@pytest.mark.parametrize(
+    ["pin", "current_pin"],
+    [
+        (b"9999", b"8888"),
+        (b"9999", "8888"),
+        ("9999", b"8888"),
+        ("9999", "8888"),
+    ],
+)
+def test_vis_change_change_current_pin(
+    pin: Union[bytes, str], current_pin: Union[bytes, str]
+) -> None:
     """
     Test generation of offline PIN script with VIS PIN block with current PIN
 
@@ -187,8 +222,8 @@ def test_vis_change_change_current_pin():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_ac = kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
     assert tools.key_check_digits(icc_mk_ac, 3).hex().upper() == "C5CACD"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -205,7 +240,7 @@ def test_vis_change_change_current_pin():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "A41D47"
 
     # Encrypt new PIN
-    pin_block = sm.format_vis_pin_block(icc_mk_ac, b"9999", b"8888")
+    pin_block = sm.format_vis_pin_block(icc_mk_ac, pin, current_pin)
     assert pin_block.hex().upper() == "8C1199FFC4B001F1"
     command_data = sm.encrypt_command_data(sk_smc, pin_block, sm.EncryptionType.VISA)
     assert command_data.hex().upper() == "C29371CC36BA70C1EE671384F0D3A7B9"
@@ -216,7 +251,18 @@ def test_vis_change_change_current_pin():
     assert mac.hex().upper() == "6AB3AD15D8B0621A"
 
 
-def test_vis_change_current_pin_12():
+@pytest.mark.parametrize(
+    ["pin", "current_pin"],
+    [
+        (b"999999999999", b"888888888888"),
+        (b"999999999999", "888888888888"),
+        ("999999999999", b"888888888888"),
+        ("999999999999", "888888888888"),
+    ],
+)
+def test_vis_change_current_pin_12(
+    pin: Union[bytes, str], current_pin: Union[bytes, str]
+) -> None:
     """
     Test generation of offline PIN script with VIS PIN block with current PIN
     Both PINs are 12 digits long.
@@ -234,8 +280,8 @@ def test_vis_change_current_pin_12():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_ac = kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
     assert tools.key_check_digits(icc_mk_ac, 3).hex().upper() == "C5CACD"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -252,7 +298,7 @@ def test_vis_change_current_pin_12():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "A41D47"
 
     # Encrypt new PIN
-    pin_block = sm.format_vis_pin_block(icc_mk_ac, b"999999999999", b"888888888888")
+    pin_block = sm.format_vis_pin_block(icc_mk_ac, pin, current_pin)
     assert pin_block.hex().upper() == "841111112A5E67F1"
     command_data = sm.encrypt_command_data(sk_smc, pin_block, sm.EncryptionType.VISA)
     assert command_data.hex().upper() == "622066A74F1E974AEE671384F0D3A7B9"
@@ -263,7 +309,14 @@ def test_vis_change_current_pin_12():
     assert mac.hex().upper() == "829AC5DE4B88074D"
 
 
-def test_ccd_pin_change():
+@pytest.mark.parametrize(
+    "pin",
+    [
+        b"9999",
+        "9999",
+    ],
+)
+def test_ccd_pin_change(pin: Union[bytes, str]) -> None:
     """
     Test generation of offline PIN script with ISO format 2 PIN block'
     Common Core Definition. Mandatory padding.
@@ -281,8 +334,8 @@ def test_ccd_pin_change():
     assert tools.key_check_digits(iss_mk_smi, 3).hex().upper() == "08D7B4"
 
     # Derive ICC master keys
-    pan = b"1234567890123456"
-    psn = b"01"
+    pan = "1234567890123456"
+    psn = "01"
     icc_mk_smc = kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
     assert tools.key_check_digits(icc_mk_smc, 3).hex().upper() == "6B0F76"
     icc_mk_smi = kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
@@ -297,7 +350,7 @@ def test_ccd_pin_change():
     assert tools.key_check_digits(sk_smi, 3).hex().upper() == "F088F8"
 
     # Encrypt new PIN
-    pin_block = sm.format_iso9564_2_pin_block(b"9999")
+    pin_block = sm.format_iso9564_2_pin_block(pin)
     assert pin_block.hex().upper() == "249999FFFFFFFFFF"
     command_data = sm.encrypt_command_data(sk_smc, pin_block, sm.EncryptionType.EMV)
     assert command_data.hex().upper() == "28367E05DE3381C29D30A6055A8DEB86"

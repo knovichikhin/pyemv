@@ -5,8 +5,8 @@ def test_generate_cvc3_track2() -> None:
     # Device ICC CVC3 key from ISS CVC3 key using method A
     # Issuer may choose to use method A or B.
     iss_cvc3 = bytes.fromhex("01234567899876543210012345678998")
-    pan = b"5123456789012345"
-    psn = b"00"
+    pan = "5123456789012345"
+    psn = "00"
     icc_cvc3 = kd.derive_icc_mk_a(iss_cvc3, pan, psn)
     assert tools.key_check_digits(icc_cvc3).hex().upper() == "BB8F"
 
@@ -24,8 +24,8 @@ def test_generate_cvc3_track1() -> None:
     # Device ICC CVC3 key from ISS CVC3 key using method A
     # Issuer may choose to use method A or B.
     iss_cvc3 = bytes.fromhex("01234567899876543210012345678998")
-    pan = b"5123456789012345"
-    psn = b"00"
+    pan = "5123456789012345"
+    psn = "00"
     icc_cvc3 = kd.derive_icc_mk_a(iss_cvc3, pan, psn)
     assert tools.key_check_digits(icc_cvc3).hex().upper() == "BB8F"
 

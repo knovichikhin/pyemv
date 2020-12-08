@@ -16,7 +16,8 @@ Install::
 
     pip install pyemv
 
-PyEMV consists of the following modules:
+PyEMV Modules
+~~~~~~~~~~~~~
 
     - kd - Key Derivation support for ICC master keys and session keys
     - ac - Application Cryptogram support for ARQC, AAC, TC, and
@@ -37,8 +38,8 @@ ICC Master Key derivation method A and B:
 
     >>> from pyemv import kd
     >>> iss_mk = bytes.fromhex('0123456789ABCDEFFEDCBA9876543210')
-    >>> pan = b'99012345678901234'
-    >>> psn = b'45'
+    >>> pan = '99012345678901234'
+    >>> psn = '45'
     >>> icc_mk_a = kd.derive_icc_mk_a(iss_mk, pan, psn)
     >>> icc_mk_a.hex().upper()
     '67F8292358083E5EA7AB7FDA58D53B6B'
@@ -99,7 +100,7 @@ Secure Messaging Confidentiality:
 
 .. code-block:: python
 
-    >>> pin_block = sm.format_iso9564_2_pin_block(b'9999')
+    >>> pin_block = sm.format_iso9564_2_pin_block('9999')
     >>> pin_block.hex().upper()
     '249999FFFFFFFFFF'
     >>> sk_smc = bytes.fromhex('0123456789ABCDEFFEDCBA9876543210')
@@ -152,7 +153,7 @@ come together.
     >>> command_mac.hex().upper()
     'B5CB29759F9C3919'
     >>> pin_command = cvn18.generate_pin_change_command(
-    ...         pin=b'9999',
+    ...         pin='9999',
     ...         tag_9f26=arqc,
     ...         tag_9f36=atc)
     >>> pin_command.hex().upper()

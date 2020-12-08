@@ -102,8 +102,8 @@ def test_derive_common_sk() -> None:
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"12345678901234567"
-    psn = b"45"
+    pan = "12345678901234567"
+    psn = "45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "FF08"
 
@@ -140,7 +140,7 @@ def test_derive_icc_mk_b_pan16() -> None:
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"1234567890123456"
+    pan = "1234567890123456"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "BAB0"
 
@@ -261,8 +261,8 @@ def test_derive_icc_mk_b_pan18() -> None:
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"123456789012345679"
-    psn = b"00"
+    pan = "123456789012345679"
+    psn = "00"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "C2F3"
 
@@ -302,8 +302,8 @@ def test_derive_icc_mk_b_sha_pad() -> None:
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"000000000000000005"
-    psn = b"23"
+    pan = "000000000000000005"
+    psn = "23"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "DD73"
 
@@ -338,7 +338,7 @@ def test_derive_visa_sm_sk() -> None:
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "7B83"
 
     # Derive ICC master key
-    pan = b"1234567890123456"
+    pan = "1234567890123456"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "F010"
 

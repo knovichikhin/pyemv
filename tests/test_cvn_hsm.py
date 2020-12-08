@@ -6,15 +6,20 @@ from pyemv.tools import key_check_digits
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin", "current_pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999", b"8888"),
+        (b"1234567890123456", "00", b"9999", "8888"),
+        ("1234567890123456", b"00", "9999", b"8888"),
+        ("1234567890123456", "00", "9999", "8888"),
     ],
 )
-def test_visa_cvn10(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_visa_cvn10(
+    pan: Union[bytes, str],
+    psn: Union[bytes, str],
+    pin: Union[bytes, str],
+    current_pin: Union[bytes, str],
+) -> None:
     """Visa CVN 10"""
     cvn10 = cvn.VisaCVN10(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -65,9 +70,7 @@ def test_visa_cvn10(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     )
 
     # PIN change without current PIN and its session keys
-    pin_command = cvn10.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn10.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert (
         pin_command.hex().upper()
         == "8424000218BB221AF527377A2811D2B6EBC396A9391A965A5CB2CE62DA"
@@ -83,7 +86,7 @@ def test_visa_cvn10(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
 
     # PIN change with current PIN and its session keys
     pin_command = cvn10.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc, current_pin=b"8888"
+        pin, tag_9f26=arqc, tag_9f36=atc, current_pin=current_pin
     )
     assert (
         pin_command.hex().upper()
@@ -100,15 +103,20 @@ def test_visa_cvn10(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin", "current_pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999", b"8888"),
+        (b"1234567890123456", "00", b"9999", "8888"),
+        ("1234567890123456", b"00", "9999", b"8888"),
+        ("1234567890123456", "00", "9999", "8888"),
     ],
 )
-def test_visa_cvn18(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_visa_cvn18(
+    pan: Union[bytes, str],
+    psn: Union[bytes, str],
+    pin: Union[bytes, str],
+    current_pin: Union[bytes, str],
+) -> None:
     """Visa CVN 18"""
     cvn18 = cvn.VisaCVN18(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -161,9 +169,7 @@ def test_visa_cvn18(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     )
 
     # PIN change without current PIN and its session keys
-    pin_command = cvn18.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn18.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert (
         pin_command.hex().upper()
         == "8424000218BB221AF527377A2811D2B6EBC396A9391A22B480EF312F40"
@@ -179,7 +185,7 @@ def test_visa_cvn18(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
 
     # PIN change with current PIN and its session keys
     pin_command = cvn18.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc, current_pin=b"8888"
+        pin, tag_9f26=arqc, tag_9f36=atc, current_pin=current_pin
     )
     assert (
         pin_command.hex().upper()
@@ -196,15 +202,17 @@ def test_visa_cvn18(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999"),
+        (b"1234567890123456", "00", b"9999"),
+        ("1234567890123456", b"00", "9999"),
+        ("1234567890123456", "00", "9999"),
     ],
 )
-def test_interac_cvn133(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_interac_cvn133(
+    pan: Union[bytes, str], psn: Union[bytes, str], pin: Union[bytes, str]
+) -> None:
     """Interac CVN 133"""
     cvn133 = cvn.InteracCVN133(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -262,7 +270,7 @@ def test_interac_cvn133(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     )
 
     # PIN change without current PIN and its session keys
-    pin_command = cvn133.generate_pin_change_command(b"9999", tag_9f26=arqc)
+    pin_command = cvn133.generate_pin_change_command(pin, tag_9f26=arqc)
     assert pin_command.hex().upper() == "8424000210382F36D5920D23915CC7573F770298C9"
     assert (
         key_check_digits(cvn133._derive_sk_sm_common(cvn133.icc_mk_smc, arqc))
@@ -279,15 +287,17 @@ def test_interac_cvn133(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999"),
+        (b"1234567890123456", "00", b"9999"),
+        ("1234567890123456", b"00", "9999"),
+        ("1234567890123456", "00", "9999"),
     ],
 )
-def test_mastercard_cvn16(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_mastercard_cvn16(
+    pan: Union[bytes, str], psn: Union[bytes, str], pin: Union[bytes, str]
+) -> None:
     """MasterCard CVN 16"""
     cvn16 = cvn.MasterCardCVN16(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -344,9 +354,7 @@ def test_mastercard_cvn16(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
     # PIN change without current PIN and its session keys
     # 721E9F1804000000008615842400021000859B8FE53F316DED0AB162BAB1DE61
-    pin_command = cvn16.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn16.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert pin_command.hex().upper() == "842400021000859B8FE53F316DEB4B64C36BF88E39"
     assert (
         key_check_digits(cvn16._derive_sk_sm_common(cvn16.icc_mk_smc, arqc))
@@ -363,15 +371,17 @@ def test_mastercard_cvn16(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999"),
+        (b"1234567890123456", "00", b"9999"),
+        ("1234567890123456", b"00", "9999"),
+        ("1234567890123456", "00", "9999"),
     ],
 )
-def test_mastercard_cvn17(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_mastercard_cvn17(
+    pan: Union[bytes, str], psn: Union[bytes, str], pin: Union[bytes, str]
+) -> None:
     """MasterCard CVN 17"""
     cvn17 = cvn.MasterCardCVN17(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -430,9 +440,7 @@ def test_mastercard_cvn17(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
     # PIN change without current PIN and its session keys
     # 721E9F180400000000861584240002108661C474E4940A4378390C64CB96756E
-    pin_command = cvn17.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn17.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert pin_command.hex().upper() == "84240002108661C474E4940A4378390C64CB96756E"
     assert (
         key_check_digits(cvn17._derive_sk_sm_common(cvn17.icc_mk_smc, arqc))
@@ -449,15 +457,17 @@ def test_mastercard_cvn17(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999"),
+        (b"1234567890123456", "00", b"9999"),
+        ("1234567890123456", b"00", "9999"),
+        ("1234567890123456", "00", "9999"),
     ],
 )
-def test_mastercard_cvn20(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_mastercard_cvn20(
+    pan: Union[bytes, str], psn: Union[bytes, str], pin: Union[bytes, str]
+) -> None:
     """MasterCard CVN 20"""
     cvn20 = cvn.MasterCardCVN20(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -513,9 +523,7 @@ def test_mastercard_cvn20(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
     # PIN change without current PIN and its session keys
     # 721E9F1804000000008615842400021000859B8FE53F316DED0AB162BAB1DE61
-    pin_command = cvn20.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn20.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert pin_command.hex().upper() == "84240002107647E71F85AA6A35AE4B4E838666773D"
     assert (
         key_check_digits(cvn20._derive_sk_sm_common(cvn20.icc_mk_smc, arqc))
@@ -532,15 +540,17 @@ def test_mastercard_cvn20(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
 
 @pytest.mark.parametrize(
-    ["pan", "psn"],
+    ["pan", "psn", "pin"],
     [
-        (b"1234567890123456", b"00"),
-        (b"1234567890123456", "00"),
-        ("1234567890123456", b"00"),
-        ("1234567890123456", "00"),
+        (b"1234567890123456", b"00", b"9999"),
+        (b"1234567890123456", "00", b"9999"),
+        ("1234567890123456", b"00", "9999"),
+        ("1234567890123456", "00", "9999"),
     ],
 )
-def test_mastercard_cvn21(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
+def test_mastercard_cvn21(
+    pan: Union[bytes, str], psn: Union[bytes, str], pin: Union[bytes, str]
+) -> None:
     """MasterCard CVN 21"""
     cvn21 = cvn.MasterCardCVN21(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
@@ -598,9 +608,7 @@ def test_mastercard_cvn21(pan: Union[bytes, str], psn: Union[bytes, str]) -> Non
 
     # PIN change without current PIN and its session keys
     # 721E9F18040000000086158424000210D9F5896BE8E283C682264E1D32DF1D51
-    pin_command = cvn21.generate_pin_change_command(
-        b"9999", tag_9f26=arqc, tag_9f36=atc
-    )
+    pin_command = cvn21.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
     assert pin_command.hex().upper() == "8424000210D9F5896BE8E283C682264E1D32DF1D51"
     assert (
         key_check_digits(cvn21._derive_sk_sm_common(cvn21.icc_mk_smc, arqc))

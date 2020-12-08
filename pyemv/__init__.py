@@ -147,7 +147,7 @@ generates a new CVV for each transaction.
     '29488'
 """
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 __author__ = "Konstantin Novichikhin <konstantin.novichikhin@gmail.com>"
 
 from pyemv import ac, cvn, cvv, kd, mac, sm, tools

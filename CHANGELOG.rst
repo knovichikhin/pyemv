@@ -1,3 +1,8 @@
+1.3.0 - 2020-12-07
+------------------
+- Added MasterCard CVC3 support
+- Updated all functions and classes that have PIN, PAN or PSN parameters to accept bytes and str.
+
 1.2.0 - 2020-08-27
 ------------------
 - Added CVN support for MasterCard CVN 16, 17, 20 and 21.

@@ -1,15 +1,27 @@
+from typing import Union
+
+import pytest
 from pyemv import cvn
 from pyemv.tools import key_check_digits
 
 
-def test_visa_cvn10():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_visa_cvn10(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """Visa CVN 10"""
     cvn10 = cvn.VisaCVN10(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Check ICC Master Keys
@@ -87,14 +99,23 @@ def test_visa_cvn10():
     )
 
 
-def test_visa_cvn18():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_visa_cvn18(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """Visa CVN 18"""
     cvn18 = cvn.VisaCVN18(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Check ICC Master Keys
@@ -174,14 +195,23 @@ def test_visa_cvn18():
     )
 
 
-def test_interac_cvn133():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_interac_cvn133(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """Interac CVN 133"""
     cvn133 = cvn.InteracCVN133(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Derive ICC Master Keys
@@ -248,14 +278,23 @@ def test_interac_cvn133():
     )
 
 
-def test_mastercard_cvn16():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_mastercard_cvn16(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """MasterCard CVN 16"""
     cvn16 = cvn.MasterCardCVN16(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Derive ICC Master Keys
@@ -323,14 +362,23 @@ def test_mastercard_cvn16():
     )
 
 
-def test_mastercard_cvn17():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_mastercard_cvn17(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """MasterCard CVN 17"""
     cvn17 = cvn.MasterCardCVN17(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Derive ICC Master Keys
@@ -400,14 +448,23 @@ def test_mastercard_cvn17():
     )
 
 
-def test_mastercard_cvn20():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_mastercard_cvn20(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """MasterCard CVN 20"""
     cvn20 = cvn.MasterCardCVN20(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Derive ICC Master Keys
@@ -474,14 +531,23 @@ def test_mastercard_cvn20():
     )
 
 
-def test_mastercard_cvn21():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"1234567890123456", b"00"),
+        (b"1234567890123456", "00"),
+        ("1234567890123456", b"00"),
+        ("1234567890123456", "00"),
+    ],
+)
+def test_mastercard_cvn21(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """MasterCard CVN 21"""
     cvn21 = cvn.MasterCardCVN21(
         iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
         iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
         iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
-        pan=b"1234567890123456",
-        psn=b"00",
+        pan=pan,
+        psn=psn,
     )
 
     # Derive ICC Master Keys

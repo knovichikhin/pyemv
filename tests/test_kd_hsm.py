@@ -1,7 +1,18 @@
+from typing import Union
+import pytest
 from pyemv import ac, kd, sm, tools
 
 
-def test_derive_icc_mk_a_psn():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"12345678901234567", b"45"),
+        (b"12345678901234567", "45"),
+        ("12345678901234567", b"45"),
+        ("12345678901234567", "45"),
+    ],
+)
+def test_derive_icc_mk_a_psn(pan: Union[bytes, str], psn: Union[bytes, str]) -> None:
     """
     Verify ICC MK derivation method A with non-zero PSN.
 
@@ -15,8 +26,6 @@ def test_derive_icc_mk_a_psn():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"12345678901234567"
-    psn = b"45"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "FF08"
 
@@ -37,7 +46,14 @@ def test_derive_icc_mk_a_psn():
     assert arpc.hex().upper() == "78A372523FA35A03"
 
 
-def test_derive_icc_mk_a_no_psn():
+@pytest.mark.parametrize(
+    "pan",
+    [
+        b"12345678901234567",
+        "12345678901234567",
+    ],
+)
+def test_derive_icc_mk_a_no_psn(pan: Union[bytes, str]) -> None:
     """
     Verify ICC MK derivation method A with a zero PSN.
 
@@ -51,7 +67,6 @@ def test_derive_icc_mk_a_no_psn():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"12345678901234567"
     icc_mk = kd.derive_icc_mk_a(iss_mk, pan)
 
     # Verify AC session key
@@ -71,7 +86,7 @@ def test_derive_icc_mk_a_no_psn():
     assert arpc.hex().upper() == "BEA11C8F4A47EF6F"
 
 
-def test_derive_common_sk():
+def test_derive_common_sk() -> None:
     """
     Verify common session key derivation using algorithm
     type where both ARQC and ARPC are verified using derived
@@ -109,7 +124,7 @@ def test_derive_common_sk():
     assert arpc.hex().upper() == "C3620580668E5B65"
 
 
-def test_derive_icc_mk_b_pan16():
+def test_derive_icc_mk_b_pan16() -> None:
     """
     Verify ICC MK derivation method B using incompatible
     PAN length. Method B is applicable only if PAN is
@@ -146,7 +161,18 @@ def test_derive_icc_mk_b_pan16():
     assert arpc.hex().upper() == "8CD9AA5D"
 
 
-def test_derive_icc_mk_b_pan17_psn():
+@pytest.mark.parametrize(
+    ["pan", "psn"],
+    [
+        (b"12345678901234567", b"45"),
+        (b"12345678901234567", "45"),
+        ("12345678901234567", b"45"),
+        ("12345678901234567", "45"),
+    ],
+)
+def test_derive_icc_mk_b_pan17_psn(
+    pan: Union[bytes, str], psn: Union[bytes, str]
+) -> None:
     """
     Verify ICC MK derivation method B using 17 digit PAN.
 
@@ -160,8 +186,6 @@ def test_derive_icc_mk_b_pan17_psn():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"12345678901234567"
-    psn = b"45"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan, psn)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "0BAF"
 
@@ -182,7 +206,14 @@ def test_derive_icc_mk_b_pan17_psn():
     assert arpc.hex().upper() == "106B81D9"
 
 
-def test_derive_icc_mk_b_pan17_no_psn():
+@pytest.mark.parametrize(
+    "pan",
+    [
+        b"12345678901234567",
+        "12345678901234567",
+    ],
+)
+def test_derive_icc_mk_b_pan17_no_psn(pan: Union[bytes, str]) -> None:
     """
     Verify ICC MK derivation method B using 17 digit PAN.
 
@@ -196,7 +227,6 @@ def test_derive_icc_mk_b_pan17_no_psn():
     assert tools.key_check_digits(iss_mk, 2).hex().upper() == "08D7"
 
     # Derive ICC master key
-    pan = b"12345678901234567"
     icc_mk = kd.derive_icc_mk_b(iss_mk, pan)
     assert tools.key_check_digits(icc_mk, 2).hex().upper() == "4626"
 
@@ -217,7 +247,7 @@ def test_derive_icc_mk_b_pan17_no_psn():
     assert arpc.hex().upper() == "C1C41F3A"
 
 
-def test_derive_icc_mk_b_pan18():
+def test_derive_icc_mk_b_pan18() -> None:
     """
     Verify ICC MK derivation method B using 18 digit PAN.
 
@@ -253,7 +283,7 @@ def test_derive_icc_mk_b_pan18():
     assert arpc.hex().upper() == "ECCA0C4B"
 
 
-def test_derive_icc_mk_b_sha_pad():
+def test_derive_icc_mk_b_sha_pad() -> None:
     """
     Verify ICC MK derivation method B where the algorithm
     is forced to convert sha digest letters into numbers.
@@ -299,7 +329,7 @@ def test_derive_icc_mk_b_sha_pad():
     assert arpc.hex().upper() == "E39F1876"
 
 
-def test_derive_visa_sm_sk():
+def test_derive_visa_sm_sk() -> None:
     """
     Verify visa session key derivation for secure messaging.
     """

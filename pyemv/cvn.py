@@ -12,7 +12,7 @@
 """
 
 
-from typing import Optional
+from typing import Optional, Union
 
 from pyemv import ac as _ac
 from pyemv import kd as _kd
@@ -54,9 +54,9 @@ class VisaCVN10(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -74,12 +74,12 @@ class VisaCVN10(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -330,9 +330,9 @@ class VisaCVN18(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -350,12 +350,12 @@ class VisaCVN18(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option B.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_b(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_b(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_b(iss_mk_smc, pan, psn)
@@ -627,9 +627,9 @@ class InteracCVN133(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -647,12 +647,12 @@ class InteracCVN133(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -910,9 +910,9 @@ class MasterCardCVN16(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -930,12 +930,12 @@ class MasterCardCVN16(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -1219,9 +1219,9 @@ class MasterCardCVN17(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -1239,12 +1239,12 @@ class MasterCardCVN17(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -1539,9 +1539,9 @@ class MasterCardCVN20(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -1559,12 +1559,12 @@ class MasterCardCVN20(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)
@@ -1838,9 +1838,9 @@ class MasterCardCVN21(object):
     iss_mk_smc : bytes
         16-byte binary Issuer Master Key for Issuer Script Confidentiality.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Attributes
@@ -1858,12 +1858,12 @@ class MasterCardCVN21(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: bytes,
-        psn: Optional[bytes] = None,
+        pan: Union[bytes, str],
+        psn: Optional[Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
-        psn = psn or b"00"
+        psn = psn or "00"
         self.icc_mk_ac = _kd.derive_icc_mk_a(iss_mk_ac, pan, psn)
         self.icc_mk_smi = _kd.derive_icc_mk_a(iss_mk_smi, pan, psn)
         self.icc_mk_smc = _kd.derive_icc_mk_a(iss_mk_smc, pan, psn)

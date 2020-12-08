@@ -62,8 +62,8 @@ def generate_cvc3(icc_cvc3: bytes, track_template: bytes, atc: bytes, un: bytes)
     >>> from pyemv.cvv import generate_cvc3
     >>> from pyemv.kd import derive_icc_mk_a
     >>> iss_cvc3 = bytes.fromhex("01234567899876543210012345678998")
-    >>> pan = b"5123456789012345"
-    >>> psn = b"00"
+    >>> pan = "5123456789012345"
+    >>> psn = "00"
     >>> icc_cvc3 = derive_icc_mk_a(iss_cvc3, pan, psn)
     >>> track2 = bytes.fromhex("5123456789012345D35121010000000000000F")
     >>> atc = bytes.fromhex("005E")

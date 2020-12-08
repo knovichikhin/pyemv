@@ -16,7 +16,9 @@ __all__ = [
 ]
 
 
-def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> bytes:
+def derive_icc_mk_a(
+    iss_mk: bytes, pan: Union[bytes, str], psn: Optional[Union[bytes, str]] = None
+) -> bytes:
     r"""ICC Master Key Derivation. EMV Option A.
     Uses PAN, PAN Sequence Number, MK ISS, Triple DES.
 
@@ -25,9 +27,9 @@ def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     iss_mk : bytes
         Binary Issuer Master Key to derive ICC Master Key from.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Returns
@@ -55,12 +57,18 @@ def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     --------
     >>> from pyemv import kd
     >>> iss_mk = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
-    >>> icc_mk = kd.derive_icc_mk_a(iss_mk, pan=b"12345678901234567", psn=b"01")
+    >>> icc_mk = kd.derive_icc_mk_a(iss_mk, pan="12345678901234567", psn="01")
     >>> icc_mk.hex().upper()
     '73AD54688CEF2934B0979857E3C719F1'
     """
     if psn is None:
-        psn = b"00"
+        psn = "00"
+
+    if isinstance(psn, bytes):
+        psn = psn.decode("ascii")
+
+    if isinstance(pan, bytes):
+        pan = pan.decode("ascii")
 
     # Data A must be at most 16 digits, right-justified,
     # zero-padded from the left.
@@ -74,7 +82,9 @@ def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     return _tools.adjust_key_parity(icc_mk)
 
 
-def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> bytes:
+def derive_icc_mk_b(
+    iss_mk: bytes, pan: Union[bytes, str], psn: Optional[Union[bytes, str]] = None
+) -> bytes:
     r"""ICC Master Key Derivation. EMV Option B.
     Uses PAN, PAN Sequence Number, MK ISS, Triple DES, SHA-1 and
     decimalisation of hex digits.
@@ -84,9 +94,9 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     iss_mk : bytes
         Binary Issuer Master Key to derive ICC Master Key from.
         Has to be a valid DES key.
-    pan : bytes
+    pan : bytes or str
         ASCII Application Primary Account Number.
-    psn : bytes, optional
+    psn : bytes or str, optional
         ASCII 2-digit PAN Sequence Number (default 00).
 
     Returns
@@ -114,7 +124,7 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     --------
     >>> from pyemv import kd
     >>> iss_mk = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
-    >>> icc_mk = kd.derive_icc_mk_b(iss_mk, pan=b"12345678901234567", psn=b"01")
+    >>> icc_mk = kd.derive_icc_mk_b(iss_mk, pan="12345678901234567", psn="01")
     >>> icc_mk.hex().upper()
     'AD406D7F6D7570916D75E5DCAB8CF737'
     """
@@ -123,12 +133,18 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
         return derive_icc_mk_a(iss_mk, pan, psn)
 
     if psn is None:
-        psn = b"00"
+        psn = "00"
+
+    if isinstance(psn, bytes):
+        psn = psn.decode("ascii")
+
+    if isinstance(pan, bytes):
+        pan = pan.decode("ascii")
 
     # Data A must be an even number of digits,
     # right-justified, zero-padded from the left.
     if len(pan) % 2:
-        pan_psn = _binascii.a2b_hex(b"0" + pan + psn)
+        pan_psn = _binascii.a2b_hex("0" + pan + psn)
     else:
         pan_psn = _binascii.a2b_hex(pan + psn)
 

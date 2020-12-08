@@ -122,8 +122,8 @@ come together.
     ...     iss_mk_ac=bytes.fromhex('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'),
     ...     iss_mk_smi=bytes.fromhex('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'),
     ...     iss_mk_smc=bytes.fromhex('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC'),
-    ...     pan=b'1234567890123456',
-    ...     psn=b'00')
+    ...     pan='1234567890123456',
+    ...     psn='00')
     >>> atc = bytes.fromhex('0FFF')
     >>> arqc = cvn18.generate_ac(
     ...     tag_9f02=bytes.fromhex('000000009999'),
@@ -168,13 +168,13 @@ generates a new CVV for each transaction.
 
     >>> from pyemv.cvv import generate_cvc3
     >>> from pyemv.kd import derive_icc_mk_a
-    >>> iss_cvc3 = bytes.fromhex("01234567899876543210012345678998")
-    >>> pan = b"5123456789012345"
-    >>> psn = b"00"
+    >>> iss_cvc3 = bytes.fromhex('01234567899876543210012345678998')
+    >>> pan = '5123456789012345'
+    >>> psn = '00'
     >>> icc_cvc3 = derive_icc_mk_a(iss_cvc3, pan, psn)
-    >>> track2 = bytes.fromhex("5123456789012345D35121010000000000000F")
-    >>> atc = bytes.fromhex("005E")
-    >>> un = bytes.fromhex("00000899")
+    >>> track2 = bytes.fromhex('5123456789012345D35121010000000000000F')
+    >>> atc = bytes.fromhex('005E')
+    >>> un = bytes.fromhex('00000899')
     >>> generate_cvc3(icc_cvc3, track2, atc, un)
     '29488'
 

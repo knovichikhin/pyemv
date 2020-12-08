@@ -7,6 +7,8 @@ generate a new CVV for each transaction.
 from pyemv import mac as _mac
 from pyemv import tools as _tools
 
+__all__ = ["generate_cvc3"]
+
 
 def generate_cvc3(icc_cvc3: bytes, track_template: bytes, atc: bytes, un: bytes) -> str:
     r"""Generate MasterCard Dynamic Card Verification Code (CVC3).

@@ -6,9 +6,7 @@ import binascii as _binascii
 import hashlib as _hashlib
 from typing import Optional, Union
 
-from pyemv.tools import adjust_key_parity as _adjust_key_parity
-from pyemv.tools import encrypt_tdes_ecb as _encrypt_tdes_ecb
-from pyemv.tools import xor as _xor
+from pyemv import tools as _tools
 
 __all__ = [
     "derive_icc_mk_a",
@@ -69,11 +67,11 @@ def derive_icc_mk_a(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     data_a = _binascii.a2b_hex((pan + psn)[-16:].zfill(16))
 
     # Data B is inverted data A
-    data_b = _xor(data_a, b"\xFF" * len(data_a))
+    data_b = _tools.xor(data_a, b"\xFF" * len(data_a))
 
-    icc_mk = _encrypt_tdes_ecb(iss_mk, data_a + data_b)
+    icc_mk = _tools.encrypt_tdes_ecb(iss_mk, data_a + data_b)
 
-    return _adjust_key_parity(icc_mk)
+    return _tools.adjust_key_parity(icc_mk)
 
 
 def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> bytes:
@@ -152,11 +150,11 @@ def derive_icc_mk_b(iss_mk: bytes, pan: bytes, psn: Optional[bytes] = None) -> b
     data_a = _binascii.a2b_hex(result)
 
     # Data B is inverted data A
-    data_b = _xor(data_a, b"\xFF" * len(data_a))
+    data_b = _tools.xor(data_a, b"\xFF" * len(data_a))
 
-    icc_mk = _encrypt_tdes_ecb(iss_mk, data_a + data_b)
+    icc_mk = _tools.encrypt_tdes_ecb(iss_mk, data_a + data_b)
 
-    return _adjust_key_parity(icc_mk)
+    return _tools.adjust_key_parity(icc_mk)
 
 
 def derive_common_sk(icc_mk: bytes, r: Union[bytes, bytearray]) -> bytes:
@@ -216,9 +214,9 @@ def derive_common_sk(icc_mk: bytes, r: Union[bytes, bytearray]) -> bytes:
     r_b = bytearray(r)
     r_b[2] = 0x0F
 
-    sk = _encrypt_tdes_ecb(icc_mk, r_a + r_b)
+    sk = _tools.encrypt_tdes_ecb(icc_mk, r_a + r_b)
 
-    return _adjust_key_parity(sk)
+    return _tools.adjust_key_parity(sk)
 
 
 def derive_visa_sm_sk(icc_mk: bytes, atc: bytes) -> bytes:
@@ -258,12 +256,12 @@ def derive_visa_sm_sk(icc_mk: bytes, atc: bytes) -> bytes:
     if len(atc) != 2:
         raise ValueError("ATC value must be 2 bytes long")
 
-    # SK Key A (i.e. first 8 bytes) = r _xor MK Key A
+    # SK Key A (i.e. first 8 bytes) = r xor MK Key A
     r = b"\x00" * 6 + atc
-    sk_a = _xor(r, icc_mk[:8])
+    sk_a = _tools.xor(r, icc_mk[:8])
 
-    # SK Key B (i.e. second 8 bytes) = r _xor MK Key B
-    r = b"\x00" * 6 + _xor(atc, b"\xff\xff")
-    sk_b = _xor(r, icc_mk[8:])
+    # SK Key B (i.e. second 8 bytes) = r xor MK Key B
+    r = b"\x00" * 6 + _tools.xor(atc, b"\xff\xff")
+    sk_b = _tools.xor(r, icc_mk[8:])
 
-    return _adjust_key_parity(sk_a + sk_b)
+    return _tools.adjust_key_parity(sk_a + sk_b)

@@ -9,11 +9,8 @@ import sys as _sys
 from enum import Enum as _Enum
 from typing import Optional
 
-from pyemv.mac import mac_iso9797_3 as _mac_iso9797_3
-from pyemv.mac import pad_iso9797_2 as _pad_iso9797_2
-from pyemv.tools import encrypt_tdes_cbc as _encrypt_tdes_cbc
-from pyemv.tools import encrypt_tdes_ecb as _encrypt_tdes_ecb
-from pyemv.tools import xor as _xor
+from pyemv import mac as _mac
+from pyemv import tools as _tools
 
 __all__ = [
     "generate_command_mac",
@@ -88,7 +85,7 @@ def generate_command_mac(
     if len(sk_smi) != 16:
         raise ValueError("Session Key must be a double length DES key")
 
-    return _mac_iso9797_3(sk_smi[:8], sk_smi[-8:], command, 2, length)
+    return _mac.mac_iso9797_3(sk_smi[:8], sk_smi[-8:], command, 2, length)
 
 
 class EncryptionType(_Enum):
@@ -146,7 +143,7 @@ def encrypt_command_data(
 
     See Also
     --------
-    pyemv.mac._pad_iso9797_2 : ISO/IEC 9797-1 padding method 2
+    pyemv.mac.pad_iso9797_2 : ISO/IEC 9797-1 padding method 2
 
     Examples
     --------
@@ -164,9 +161,9 @@ def encrypt_command_data(
     # Prepend data length as a single byte then
     # pad according to ISO/IEC 9797-1 method 2
     if encryption_type == EncryptionType.VISA:
-        return _encrypt_tdes_ecb(
+        return _tools.encrypt_tdes_ecb(
             sk_smc,
-            _pad_iso9797_2(
+            _mac.pad_iso9797_2(
                 len(command_data).to_bytes(1, _sys.byteorder) + command_data, 8
             ),
         )
@@ -175,21 +172,21 @@ def encrypt_command_data(
     # pad according to ISO/IEC 9797-1 method 2
     if encryption_type == EncryptionType.MASTERCARD:
         if len(command_data) % 8 > 0:
-            return _encrypt_tdes_cbc(
+            return _tools.encrypt_tdes_cbc(
                 sk_smc,
                 b"\x00\x00\x00\x00\x00\x00\x00\x00",
-                _pad_iso9797_2(command_data, 8),
+                _mac.pad_iso9797_2(command_data, 8),
             )
-        return _encrypt_tdes_cbc(
+        return _tools.encrypt_tdes_cbc(
             sk_smc, b"\x00\x00\x00\x00\x00\x00\x00\x00", command_data
         )
 
     # Always pad according to ISO/IEC 9797-1 method 2
     if encryption_type == EncryptionType.EMV:
-        return _encrypt_tdes_cbc(
+        return _tools.encrypt_tdes_cbc(
             sk_smc,
             b"\x00\x00\x00\x00\x00\x00\x00\x00",
-            _pad_iso9797_2(command_data, 8),
+            _mac.pad_iso9797_2(command_data, 8),
         )
 
     raise TypeError(
@@ -248,14 +245,14 @@ def format_vis_pin_block(
         pin + b"F" * (14 - len(pin))
     )
 
-    pin_block = _xor(block_a, block_b)
+    pin_block = _tools.xor(block_a, block_b)
 
     # Generate VIS PIN block using current PIN
     if current_pin is not None:
         if len(current_pin) < 4 or len(current_pin) > 12:
             raise ValueError("Current PIN must be between 4 and 12 digits long")
 
-        pin_block = _xor(
+        pin_block = _tools.xor(
             pin_block, _binascii.a2b_hex(current_pin + b"0" * (16 - len(current_pin)))
         )
 

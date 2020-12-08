@@ -3,7 +3,7 @@ import pytest
 from pyemv import mac
 
 
-def test_mac_iso9797_3():
+def test_mac_iso9797_3() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -53,7 +53,7 @@ def test_mac_iso9797_3():
     assert _mac == "1789FED38FC05D1B"
 
 
-def test_pad_iso9797_1():
+def test_pad_iso9797_1() -> None:
     _mac = mac.pad_iso9797_1(b"")
     assert _mac == b"\x00" * 8
 
@@ -66,7 +66,7 @@ def test_pad_iso9797_1():
         assert _mac == (b"F" * i) + (b"\x00" * (16 - i))
 
 
-def test_pad_iso9797_2():
+def test_pad_iso9797_2() -> None:
     _mac = mac.pad_iso9797_2(b"")
     assert _mac == b"\x80" + b"\x00" * 7
 
@@ -83,7 +83,7 @@ def test_pad_iso9797_2():
     assert _mac == (b"F" * 16) + b"\x80" + (b"\x00" * 15)
 
 
-def test_pad_iso9797_3():
+def test_pad_iso9797_3() -> None:
     _mac = mac.pad_iso9797_3(b"")
     assert _mac == b"\x00" * 8 + b"\x00" * 8
     _mac = mac.pad_iso9797_3(b"", 16)

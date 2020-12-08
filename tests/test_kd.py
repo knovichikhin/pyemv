@@ -3,7 +3,7 @@ import pytest
 from pyemv import kd
 
 
-def test_derive_common_sk_exception():
+def test_derive_common_sk_exception() -> None:
     # ISS MK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -45,7 +45,7 @@ def test_derive_common_sk_exception():
         )
 
 
-def test_derive_visa_sm_sk_exception():
+def test_derive_visa_sm_sk_exception() -> None:
     # ISS MK < 16 bytes
     with pytest.raises(
         ValueError,

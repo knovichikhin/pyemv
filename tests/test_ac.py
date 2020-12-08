@@ -3,7 +3,7 @@ import pytest
 from pyemv import ac
 
 
-def test_generate_ac_exception():
+def test_generate_ac_exception() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -32,11 +32,11 @@ def test_generate_ac_exception():
         ac.generate_ac(
             sk_ac=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
             data=bytes.fromhex("12345678901214"),
-            padding_type={},
+            padding_type={},  # type: ignore
         )
 
 
-def test_generate_arpc_1_exception():
+def test_generate_arpc_1_exception() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -104,7 +104,7 @@ def test_generate_arpc_1_exception():
         )
 
 
-def test_generate_arpc_2_exception():
+def test_generate_arpc_2_exception() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,

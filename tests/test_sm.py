@@ -3,7 +3,7 @@ import pytest
 from pyemv import sm
 
 
-def test_generate_command_mac_exception():
+def test_generate_command_mac_exception() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -25,7 +25,7 @@ def test_generate_command_mac_exception():
         )
 
 
-def test_encrypt_command_data_mastercard_nonpadded():
+def test_encrypt_command_data_mastercard_nonpadded() -> None:
     # If MasterCard data is not multiple of 8 bytes
     # then it has to be padded with 0x80 and 0x00 until
     # it is multiple of 8 bytes.
@@ -47,7 +47,7 @@ def test_encrypt_command_data_mastercard_nonpadded():
     assert no_padding_required == padding_required
 
 
-def test_encrypt_command_data_exception():
+def test_encrypt_command_data_exception() -> None:
     # SK < 16 bytes
     with pytest.raises(
         ValueError,
@@ -78,11 +78,11 @@ def test_encrypt_command_data_exception():
         sm.encrypt_command_data(
             sk_smc=bytes.fromhex("AAAAAAAAAAAAAAAABBBBBBBBBBBBBBBB"),
             command_data=bytes.fromhex("12345678901214"),
-            encryption_type={},
+            encryption_type={},  # type: ignore
         )
 
 
-def test_format_vis_pin_block_exception():
+def test_format_vis_pin_block_exception() -> None:
     # PIN < 4 bytes
     with pytest.raises(
         ValueError,
@@ -146,7 +146,7 @@ def test_format_vis_pin_block_exception():
         )
 
 
-def test_format_iso9564_2_pin_block_exception():
+def test_format_iso9564_2_pin_block_exception() -> None:
     # PIN < 4 bytes
     with pytest.raises(
         ValueError,

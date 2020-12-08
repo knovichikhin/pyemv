@@ -14,6 +14,8 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 if __name__ == "__main__":
@@ -39,5 +41,5 @@ if __name__ == "__main__":
         ],
         classifiers=classifiers,
         python_requires=">=3.5",
-        keywords="emv arqc arpc",
+        keywords="emv arqc arpc tc aac smi smc cvc3",
     )

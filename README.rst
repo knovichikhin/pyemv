@@ -1,36 +1,35 @@
 PyEMV
------
+=====
 
 |pypi| |coverage|
 
-PyEMV package provides methods to generate
+``PyEMV`` package provides methods to generate
 
-    - Application Cryptograms (TC, ARQC, or AAC) that's used to verify ICC
-    - Authorization Response Cryptogram (ARPC) that's used to verify card issuer
-    - Secure Messaging Integrity and Confidentiality that's used by the issuer to update values on the ICC
-    - Dynamic Card Verification Values
+- Application Cryptograms (TC, ARQC, or AAC) that's used to verify ICC
+- Authorization Response Cryptogram (ARPC) that's used to verify card issuer
+- Secure Messaging Integrity and Confidentiality that's used by the issuer to update values on the ICC
+- Dynamic Card Verification Values
 
-PyEMV is built on top of `cryptography <https://pypi.org/project/cryptography/>`_ package.
+Install:
 
-Install::
+.. code-block::
 
     pip install pyemv
 
 PyEMV Modules
-~~~~~~~~~~~~~
-
-    - kd - Key Derivation support for ICC master keys and session keys
-    - ac - Application Cryptogram support for ARQC, AAC, TC, and
-      ARPC
-    - sm - Secure Messaging support for script command integrity
-      and confidentiality. It also provides support for PIN blocks.
-    - cvn - Putting it all together for various Cryptogram Version Numbers,
-      such as appropriate key derivation, cryptogram generation and script formatting
-      for each supported CVN.
-    - cvv - Support for dynamic card verification, such as CVC3.
+-------------
+- kd - Key Derivation support for ICC master keys and session keys
+- ac - Application Cryptogram support for ARQC, AAC, TC, and
+  ARPC
+- sm - Secure Messaging support for script command integrity
+  and confidentiality. It also provides support for PIN blocks.
+- cvn - Putting it all together for various Cryptogram Version Numbers,
+  such as appropriate key derivation, cryptogram generation and script formatting
+  for each supported CVN.
+- cvv - Support for dynamic card verification, such as CVC3.
 
 Key Derivation
-~~~~~~~~~~~~~~
+--------------
 
 ICC Master Key derivation method A and B:
 
@@ -57,7 +56,7 @@ Common Session Key derivation:
     '29B33180E567CE38EA4CBC9D753B0E61'
 
 Cryptogram Generation
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 Application Request Cryptogram generation:
 
@@ -83,7 +82,7 @@ Application Response Cryptogram generation method 1 and 2:
     'CB56FA40'
 
 Secure Messaging
-~~~~~~~~~~~~~~~~
+----------------
 
 Secure Messaging Integrity (MAC):
 
@@ -110,7 +109,7 @@ Secure Messaging Confidentiality:
     '5A862D1381CCB94822CFDD706A376178'
 
 Cryptogram Version Number
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Cryptogram Version Number (CVN) module demonstrates how
 application cryptogram generation, key derivation and secure messaging
@@ -125,6 +124,7 @@ come together.
     ...     iss_mk_smc=bytes.fromhex('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC'),
     ...     pan='1234567890123456',
     ...     psn='00')
+
     >>> atc = bytes.fromhex('0FFF')
     >>> arqc = cvn18.generate_ac(
     ...     tag_9f02=bytes.fromhex('000000009999'),
@@ -140,18 +140,21 @@ come together.
     ...     tag_9f10=bytes.fromhex('06011203A0B800'))
     >>> arqc.hex().upper()
     '769577B5ABE9FE62'
+
     >>> arpc = cvn18.generate_arpc(
     ...     tag_9f26=arqc,
     ...     tag_9f36=atc,
     ...     csu=bytes.fromhex('00000000'))
     >>> arpc.hex().upper()
     '76503F48'
+
     >>> command_mac = cvn18.generate_command_mac(
     ...         command_header=bytes.fromhex('8418000008'),
     ...         tag_9f26=arqc,
     ...         tag_9f36=atc)
     >>> command_mac.hex().upper()
     'B5CB29759F9C3919'
+
     >>> pin_command = cvn18.generate_pin_change_command(
     ...         pin='9999',
     ...         tag_9f26=arqc,
@@ -160,7 +163,7 @@ come together.
     '84240002182DC7A061323BA62472BC5308BD291B5F665B3A927E60661E'
 
 Dynamic Card Verification
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 Dynamic card verification, unlike traditional CVV/CVC,
 generates a new CVV for each transaction.
@@ -169,10 +172,12 @@ generates a new CVV for each transaction.
 
     >>> from pyemv.cvv import generate_cvc3
     >>> from pyemv.kd import derive_icc_mk_a
+
     >>> iss_cvc3 = bytes.fromhex('01234567899876543210012345678998')
     >>> pan = '5123456789012345'
     >>> psn = '00'
     >>> icc_cvc3 = derive_icc_mk_a(iss_cvc3, pan, psn)
+
     >>> track2 = bytes.fromhex('5123456789012345D35121010000000000000F')
     >>> atc = bytes.fromhex('005E')
     >>> un = bytes.fromhex('00000899')
@@ -182,7 +187,7 @@ generates a new CVV for each transaction.
 Contribute
 ----------
 
-`PyEMV` is hosted on `GitHub <https://github.com/knovichikhin/pyemv>`_.
+``PyEMV`` is hosted on `GitHub <https://github.com/knovichikhin/pyemv>`_.
 
 Feel free to fork and send contributions over.
 

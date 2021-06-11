@@ -1,5 +1,5 @@
 import sys as _sys
-from typing import Union
+import typing as _typing
 
 from cryptography.hazmat.backends import default_backend as _default_backend
 from cryptography.hazmat.primitives.ciphers import Cipher as _Cipher
@@ -63,7 +63,7 @@ def odd_parity(v: int) -> int:
     return (0x6996 >> v) & 1
 
 
-def adjust_key_parity(key: Union[bytes, bytearray]) -> bytes:
+def adjust_key_parity(key: _typing.Union[bytes, bytearray]) -> bytes:
     r"""Adjust DES key parity key
 
     Parameters

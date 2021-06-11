@@ -12,7 +12,7 @@
 """
 
 
-from typing import Optional, Union
+import typing as _typing
 
 from pyemv import ac as _ac
 from pyemv import kd as _kd
@@ -74,8 +74,8 @@ class VisaCVN10(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -263,10 +263,10 @@ class VisaCVN10(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
-        current_pin: Optional[Union[bytes, str]] = None,
+        current_pin: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -350,8 +350,8 @@ class VisaCVN18(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option B.
@@ -447,7 +447,7 @@ class VisaCVN18(object):
         tag_9f26: bytes,
         tag_9f36: bytes,
         csu: bytes,
-        proprietary_auth_data: Optional[bytes] = None,
+        proprietary_auth_data: _typing.Optional[bytes] = None,
     ) -> bytes:
         """Generate Authorisation Response Cryptogram (ARPC) using method 2.
         Method for the generation of a 4-byte ARPC consists of applying
@@ -559,10 +559,10 @@ class VisaCVN18(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
-        current_pin: Optional[Union[bytes, str]] = None,
+        current_pin: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -647,8 +647,8 @@ class InteracCVN133(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -852,7 +852,7 @@ class InteracCVN133(object):
         )
 
     def generate_pin_change_command(
-        self, pin: Union[bytes, str], tag_9f26: bytes
+        self, pin: _typing.Union[bytes, str], tag_9f26: bytes
     ) -> bytes:
         """Generate a PIN change command with encrypted PIN block and MAC.
 
@@ -932,8 +932,8 @@ class MasterCardCVN16(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1150,7 +1150,7 @@ class MasterCardCVN16(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1241,8 +1241,8 @@ class MasterCardCVN17(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1470,7 +1470,7 @@ class MasterCardCVN17(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1561,8 +1561,8 @@ class MasterCardCVN20(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -1769,7 +1769,7 @@ class MasterCardCVN20(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:
@@ -1860,8 +1860,8 @@ class MasterCardCVN21(object):
         iss_mk_ac: bytes,
         iss_mk_smi: bytes,
         iss_mk_smc: bytes,
-        pan: Union[bytes, str],
-        psn: Optional[Union[bytes, str]] = None,
+        pan: _typing.Union[bytes, str],
+        psn: _typing.Optional[_typing.Union[bytes, str]] = None,
     ) -> None:
         # Derive AC, SMI, and SMC ICC Master Keys for a new card
         # using option A.
@@ -2079,7 +2079,7 @@ class MasterCardCVN21(object):
 
     def generate_pin_change_command(
         self,
-        pin: Union[bytes, str],
+        pin: _typing.Union[bytes, str],
         tag_9f26: bytes,
         tag_9f36: bytes,
     ) -> bytes:

@@ -6,8 +6,8 @@ using encipherment of the data field.
 
 import binascii as _binascii
 import sys as _sys
+import typing as _typing
 from enum import Enum as _Enum
-from typing import Optional, Union
 
 from pyemv import mac as _mac
 from pyemv import tools as _tools
@@ -22,7 +22,7 @@ __all__ = [
 
 
 def generate_command_mac(
-    sk_smi: bytes, command: bytes, length: Optional[int] = None
+    sk_smi: bytes, command: bytes, length: _typing.Optional[int] = None
 ) -> bytes:
     r"""Message Authentication Code (MAC) for Issuer Script Integrity
 
@@ -198,8 +198,8 @@ def encrypt_command_data(
 
 def format_vis_pin_block(
     icc_mk_ac: bytes,
-    pin: Union[bytes, str],
-    current_pin: Optional[Union[bytes, str]] = None,
+    pin: _typing.Union[bytes, str],
+    current_pin: _typing.Optional[_typing.Union[bytes, str]] = None,
 ) -> bytes:
     r"""Format VIS PIN block with or without the current PIN.
 
@@ -267,7 +267,7 @@ def format_vis_pin_block(
     return pin_block
 
 
-def format_iso9564_2_pin_block(pin: Union[bytes, str]) -> bytes:
+def format_iso9564_2_pin_block(pin: _typing.Union[bytes, str]) -> bytes:
     r"""Format ISO 9564-1 PIN block format 2.
 
     Parameters

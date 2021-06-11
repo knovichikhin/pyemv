@@ -9,3 +9,4 @@ twine
 wheel
 setuptools
 mypy
+types-cryptography # Needed by mypy

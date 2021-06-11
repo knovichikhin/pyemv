@@ -9,7 +9,6 @@ __all__ = [
     "mac_iso9797_3",
     "pad_iso9797_1",
     "pad_iso9797_2",
-    "pad_iso9797_3",
 ]
 
 
@@ -39,7 +38,6 @@ def mac_iso9797_3(
 
             - 1 = ISO/IEC 9797-1 method 1.
             - 2 = ISO/IEC 9797-1 method 2.
-            - 3 = ISO/IEC 9797-1 method 3.
 
     length : int, optional
         Desired length of AC [4 <= N <= 8] (default 8 bytes).
@@ -81,10 +79,8 @@ def mac_iso9797_3(
         data = pad_iso9797_1(data, 8)
     elif padding == 2:
         data = pad_iso9797_2(data, 8)
-    elif padding == 3:
-        data = pad_iso9797_3(data, 8)
     else:
-        raise ValueError("Specify valid padding method: 1, 2 or 3.")
+        raise ValueError("Specify valid padding method: 1 or 2.")
 
     # Encrypt first block with key1 then
     # encrypt the rest of the data in CBC mode
@@ -181,41 +177,3 @@ def pad_iso9797_2(data: bytes, block_size: _typing.Optional[int] = None) -> byte
         block_size = 8
 
     return pad_iso9797_1(data + b"\x80", block_size)
-
-
-def pad_iso9797_3(data: bytes, block_size: _typing.Optional[int] = None) -> bytes:
-    r"""ISO/IEC 9797-1 padding method 3.
-    The padded data comprises (in this order):
-        - The length of the unpadded data (in bits) expressed
-          in big-endian binary in `block_size` bits (i.e. one `block_size`)
-        - The unpadded data
-        - As many (possibly none) bits with value 0 as are required to bring
-          the total length to a multiple of `block_size` bits
-
-    Parameters
-    ----------
-    data : bytes
-        Data to be padded
-    block_size : int, optional
-        Padded data will be multiple of specified block size (default 8).
-
-    Returns
-    -------
-    bytes
-        Padded data
-
-    Notes
-    -----
-    See https://en.wikipedia.org/wiki/ISO/IEC_9797-1 for the
-    algorithm reference.
-
-    Examples
-    --------
-    >>> from pyemv.mac import pad_iso9797_3
-    >>> pad_iso9797_3(bytes.fromhex("1234")).hex().upper()
-    '00000000000000101234000000000000'
-    """
-    if block_size is None:
-        block_size = 8
-
-    return (len(data) * 8).to_bytes(block_size, "big") + pad_iso9797_1(data, block_size)

@@ -156,16 +156,24 @@ def derive_icc_mk_b(
     digest = _hashlib.sha1(pan_psn).hexdigest()
 
     # Get first 16 digits out the hash value.
-    result = "".join(filter(str.isdigit, digest))[:16]
+    result = "".join(
+        [d for d in digest if d in {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}][
+            :16
+        ]
+    )
 
     # If there are not enough digits, substitute
     # letters using the following decimalization table:
     # Input a b c d e f
     # Table 0 1 2 3 4 5
     if len(result) < 16:
-        digest = "".join(filter((lambda x: x in ("abcdef")), digest))
+        digest = "".join(
+            [d for d in digest if d in {"a", "b", "c", "d", "e", "f"}][
+                : 16 - len(result)
+            ]
+        )
         digest = digest.translate({97: 48, 98: 49, 99: 50, 100: 51, 101: 52, 102: 53})
-        result = result + digest[: 16 - len(result)]
+        result = result + digest
 
     data_a = _binascii.a2b_hex(result)
 

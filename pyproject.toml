@@ -26,3 +26,7 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
+exclude_lines = [
+    "@_typing.overload",
+    "pragma: no cover",
+]

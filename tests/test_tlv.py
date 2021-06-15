@@ -33,6 +33,39 @@ def test_decode_tag(tags: str, value: Any) -> None:
     assert r == value
 
 
+# fmt: off
+@pytest.mark.parametrize(
+    ["tags", "value"],
+    [
+        ("", {}),
+        # Single byte length length
+        ("9C00",       {"9C":     ""}),
+        ("9C01FF",     {"9C":     "FF"}),
+        ("9C8101FF",   {"9C":     "FF"}),
+        ("9F0200",     {"9F02":   ""}),
+        ("9F0201FF",   {"9F02":   "FF"}),
+        ("9F820100",   {"9F8201": ""}),
+        ("9F820101FF", {"9F8201": "FF"}),
+        # Extended length
+        ("9C80",           {"9C": ""}),
+        ("9C8100",         {"9C": ""}),
+        ("9C820000",       {"9C": ""}),
+        ("9C83000000",     {"9C": ""}),
+        ("9C8400000000",   {"9C": ""}),
+        ("9C8101FF",       {"9C": "FF"}),
+        ("9C820001FF",     {"9C": "FF"}),
+        ("9C83000001FF",   {"9C": "FF"}),
+        ("9C8400000001FF", {"9C": "FF"}),
+    ],
+)
+# fmt: on
+def test_decode_tag_coerce(tags: str, value: Any) -> None:
+    r = tlv.decode(
+        bytes.fromhex(tags), convert=lambda t, v: v.hex().upper(), flatten=True
+    )
+    assert r == value
+
+
 def test_decode_nested() -> None:
     r = tlv.decode(b"\x9f\x02\x01\xff\xe0\x03\x9f\x03\x00\x9f\x04\x00")
     assert r == {"9F02": b"\xff", "E0": {"9F03": b""}, "9F04": b""}
@@ -129,7 +162,60 @@ def test_encode(tags: Any, value: str) -> None:
 
 
 # fmt: off
+@pytest.mark.parametrize(
+    ["tags", "value"],
+    [
+        ({}, ""),
+        # Single byte length length
+        ({"9C": ""},       "9C00"),
+        ({"9C": "FF"},     "9C01FF"),
+        ({"9F00": "FF"},   "9F0001FF"),
+        ({"9F8001": "FF"}, "9F800101FF"),
+        # Extended length
+        ({"9C": "FF"*128}, "9C8180"+"FF"*128),
+        ({"9C": "FF"*511}, "9C8201FF"+"FF"*511),
+        # Constructed
+        ({"E0": {}},                "E000"),
+        ({"E0": {"9C": ""}},       "E0029C00"),
+        ({"E0": {"9C": "FF"}},   "E0039C01FF"),
+        ({"E0": {"9F00": "FF"}}, "E0049F0001FF"),
+        ({"E0": {"9F00": "FF"}, "9C": "FF"}, "E0049F0001FF9C01FF"),
+    ],
+)
+# fmt: on
+def test_encode_str(tags: Any, value: str) -> None:
+    r = tlv.encode(tags)
+    assert r == bytes.fromhex(value)
 
+
+# fmt: off
+@pytest.mark.parametrize(
+    ["tags", "value"],
+    [
+        ({}, ""),
+        # Single byte length length
+        ({"9C": b""},         "9C00"),
+        ({"9C": b"\xFF"},     "9C01FF"),
+        ({"9F00": b"\xFF"},   "9F0001FF"),
+        ({"9F8001": b"\xFF"}, "9F800101FF"),
+        # Extended length
+        ({"9C": b"\xFF"*128}, "9C80"+"FF"*128),
+        ({"9C": b"\xFF"*255}, "9CFF"+"FF"*255),
+        # Constructed
+        ({"E0": {}},                "E000"),
+        ({"E0": {"9C": b""}},       "E0029C00"),
+        ({"E0": {"9C": b"\xFF"}},   "E0039C01FF"),
+        ({"E0": {"9F00": b"\xFF"}}, "E0049F0001FF"),
+        ({"E0": {"9F00": b"\xFF"}, "9C": b"\xFF"}, "E0049F0001FF9C01FF"),
+    ],
+)
+# fmt: on
+def test_encode_simple(tags: Any, value: str) -> None:
+    r = tlv.encode(tags, simple=True)
+    assert r == bytes.fromhex(value)
+
+
+# fmt: off
 @pytest.mark.parametrize(
     ["tags", "tag", "error"],
     [
@@ -140,15 +226,33 @@ def test_encode(tags: Any, value: str) -> None:
         ({"9F": b""},     "9F",     "Invalid tag format, expecting more data: tag '9F'."),
         ({"9F0001": b""}, "9F0001", "Invalid tag format, extra data: tag '9F0001'."),
         # Value
-        ({"EC": []},   "EC",  "Invalid value type (list) for constructed tag, expecting a dict: tag 'EC'."),
-        ({"EC": ""},   "EC",  "Invalid value type (str) for constructed tag, expecting a dict: tag 'EC'."),
-        ({"9C": []},   "9C",  "Invalid value type (list) for primitive tag, expecting bytes: tag '9C'."),
-        ({"9C": ""},   "9C",  "Invalid value type (str) for primitive tag, expecting bytes: tag '9C'."),
+        ({"EC": []},   "EC",  "Invalid value type (list) for a constructed tag, expecting a dict: tag 'EC'."),
+        ({"EC": ()},   "EC",  "Invalid value type (tuple) for a constructed tag, expecting a dict: tag 'EC'."),
+        ({"9C": []},   "9C",  "Invalid value type (list) for a primitive tag, expecting bytes or str: tag '9C'."),
+        ({"9C": ()},   "9C",  "Invalid value type (tuple) for a primitive tag, expecting bytes or str: tag '9C'."),
+        ({"9C": "0"},  "9C", "Invalid value format, expecting hexchar string: tag '9C'."),
+        ({"9C": "X"},  "9C", "Invalid value format, expecting hexchar string: tag '9C'."),
     ],
 )
 # fmt: on
 def test_encode_exception(tags: Any, tag: str, error: str) -> None:
     with pytest.raises(tlv.EncodeError) as e:
         _ = tlv.encode(tags)
+    assert e.value.args[0] == error
+    assert e.value.tag == tag
+
+
+# fmt: off
+@pytest.mark.parametrize(
+    ["tags", "tag", "error"],
+    [
+        ({"9C": b"\xFF" * 256}, "9C", "Value length (256) cannot exceed 255 bytes when 'simple' is enabled: tag '9C'."),
+        ({"9C": "FF" * 256},    "9C", "Value length (256) cannot exceed 255 bytes when 'simple' is enabled: tag '9C'."),
+    ],
+)
+# fmt: on
+def test_encode_simple_exception(tags: Any, tag: str, error: str) -> None:
+    with pytest.raises(tlv.EncodeError) as e:
+        _ = tlv.encode(tags, simple=True)
     assert e.value.args[0] == error
     assert e.value.tag == tag

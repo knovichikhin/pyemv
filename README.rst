@@ -185,10 +185,10 @@ generates a new CVV for each transaction.
     >>> generate_cvc3(icc_cvc3, track2, atc, un)
     '29488'
 
-TLV Encoder & Decoder
+TLV Decoder & Encoder
 ---------------------
 
-Use TLV encoder/decoder to disassemble and assemble tag-length-value EMV data.
+Use TLV decoder and encoder to disassemble and assemble tag-length-value EMV data.
 
 .. code-block:: python
 

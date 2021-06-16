@@ -18,6 +18,7 @@ __all__ = [
 
 def xor(data: bytes, key: bytes) -> bytes:
     r"""Apply "exlusive or" to two bytes instances.
+
     Many thanks:
     https://stackoverflow.com/a/29409299
 
@@ -42,6 +43,7 @@ def xor(data: bytes, key: bytes) -> bytes:
 
 def odd_parity(v: int) -> int:
     r"""Check integer parity.
+
     Many thanks: in_parallel
     http://p-nand-q.com/python/_algorithms/math/bit-parity.html
 
@@ -64,7 +66,7 @@ def odd_parity(v: int) -> int:
 
 
 def adjust_key_parity(key: _typing.Union[bytes, bytearray]) -> bytes:
-    r"""Adjust DES key parity key
+    r"""Adjust DES key parity key.
 
     Parameters
     ----------

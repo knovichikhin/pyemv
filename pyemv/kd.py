@@ -47,6 +47,7 @@ def derive_icc_mk_a(
 
     When a card is personalised the issuer will take the 3 iss_mk keys
     and calculate the 3 icc_mk keys to be stored on the card.
+
         - icc_mk_ac - used for the transaction cryptograms (ARQC, TC or AAC)
         - icc_mk_smi - used for Issuer Script Integrity
         - icc_mk_smc - used for Issuer Script Confidentiality
@@ -116,6 +117,7 @@ def derive_icc_mk_b(
 
     When a card is personalised the issuer will take the 3 iss_mk keys
     and calculate the 3 icc_mk keys to be stored on the card.
+
         - icc_mk_ac - used for the transaction cryptograms (ARQC, TC or AAC)
         - icc_mk_smi - used for Issuer Script Integrity
         - icc_mk_smc - used for Issuer Script Confidentiality
@@ -186,7 +188,7 @@ def derive_icc_mk_b(
 
 
 def derive_common_sk(icc_mk: bytes, r: _typing.Union[bytes, bytearray]) -> bytes:
-    r"""EMV Common Session Key Derivation
+    r"""EMV Common Session Key Derivation.
 
     Parameters
     ----------
@@ -196,7 +198,7 @@ def derive_common_sk(icc_mk: bytes, r: _typing.Union[bytes, bytearray]) -> bytes
     r : bytes, bytearray
         Binary diversification value. Examples of diversification value:
 
-            = R = ATC || 00 || 00 || 00 || 00 || 00 || 00 (AC Session Keys)
+            - R = ATC || 00 || 00 || 00 || 00 || 00 || 00 (AC Session Keys)
             - R = ARQC (Secure Messaging for Integrity and Confidentiality
               Session Keys)
             - R = ATC || 00 || 00 || UN (AC Session Keys)
@@ -248,7 +250,7 @@ def derive_common_sk(icc_mk: bytes, r: _typing.Union[bytes, bytearray]) -> bytes
 
 
 def derive_visa_sm_sk(icc_mk: bytes, atc: bytes) -> bytes:
-    r"""Visa Secure Messaging Session Key Derivation
+    r"""Visa Secure Messaging Session Key Derivation.
 
     Parameters
     ----------

@@ -43,10 +43,11 @@ jobs:
 
       - name: Test with pytest
         run: |
-          python -m pytest --cov=./pyemv --cov-report=xml
+          python -m pytest --cov --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           files: ./coverage.xml
+          flags: ubuntu-latest, ${{ matrix.python-version }}
           fail_ci_if_error: true

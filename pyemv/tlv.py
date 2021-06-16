@@ -1,4 +1,4 @@
-import typing as _typing
+import typing as _t
 
 __all__ = ["decode", "DecodeError", "encode", "EncodeError"]
 
@@ -23,7 +23,7 @@ class DecodeError(ValueError):
         msg: str,
         tag: str,
         offset: int,
-        tlv: _typing.Dict[str, _typing.Any],
+        tlv: _t.Dict[str, _t.Any],
     ):
         errmsg = f"{msg}: tag '{tag}', offset {offset}."
         ValueError.__init__(self, errmsg)
@@ -56,33 +56,33 @@ class EncodeError(ValueError):
 
 
 # fmt: off
-_S = _typing.TypeVar("_S")
-@_typing.overload
-def decode(data: bytes) -> _typing.Dict[str, _typing.Any]: ...
-@_typing.overload
-def decode(data: bytes, *, simple: _typing.Optional[bool]) -> _typing.Dict[str, _typing.Any]: ...
-@_typing.overload
-def decode(data: bytes, *, convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S]) -> _typing.Dict[str, _typing.Any]: ...
-@_typing.overload
-def decode(data: bytes, *, simple: _typing.Optional[bool], convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S]) -> _typing.Dict[str, _typing.Any]: ...
-@_typing.overload
-def decode(data: bytes, *, flatten: _typing.Optional[bool] = True) -> _typing.Dict[str, bytes]: ...
-@_typing.overload
-def decode(data: bytes, *, flatten: _typing.Optional[bool] = True, convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S]) -> _typing.Dict[str, _S]: ...
-@_typing.overload
-def decode(data: bytes, *, flatten: _typing.Optional[bool] = True, simple: _typing.Optional[bool]) -> _typing.Dict[str, bytes]: ...
-@_typing.overload
-def decode(data: bytes, *, flatten: _typing.Optional[bool] = True, simple: _typing.Optional[bool], convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S]) -> _typing.Dict[str, _S]: ...
+_S = _t.TypeVar("_S")
+@_t.overload
+def decode(data: bytes) -> _t.Dict[str, _t.Any]: ...
+@_t.overload
+def decode(data: bytes, *, simple: _t.Optional[bool]) -> _t.Dict[str, _t.Any]: ...
+@_t.overload
+def decode(data: bytes, *, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Dict[str, _t.Any]: ...
+@_t.overload
+def decode(data: bytes, *, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]]) -> _t.Dict[str, _t.Any]: ...
+@_t.overload
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True) -> _t.Dict[str, bytes]: ...
+@_t.overload
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Dict[str, _S]: ...
+@_t.overload
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool]) -> _t.Dict[str, bytes]: ...
+@_t.overload
+def decode(data: bytes, *, flatten: _t.Optional[bool] = True, simple: _t.Optional[bool], convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _S]]) -> _t.Dict[str, _S]: ...
 # fmt: on
 
 
 def decode(
-    data: _typing.Union[bytes, bytearray],
+    data: _t.Union[bytes, bytearray],
     *,
-    flatten: _typing.Optional[bool] = None,
-    simple: _typing.Optional[bool] = None,
-    convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S] = None,
-) -> _typing.Dict[str, _typing.Any]:
+    flatten: _t.Optional[bool] = None,
+    simple: _t.Optional[bool] = None,
+    convert: _t.Optional[_t.Callable[[str, _t.Union[bytes, bytearray]], _t.Any]] = None,
+) -> _t.Dict[str, _t.Any]:
     r"""Decode TLV data.
 
     Parameters
@@ -139,7 +139,7 @@ def decode(
     if convert is None:
         convert = lambda t, v: bytes(v)
 
-    dec: _typing.Dict[str, _typing.Any] = {}
+    dec: _t.Dict[str, _t.Any] = {}
 
     try:
         _decode(data, 0, len(data), dec, flatten, simple, convert)
@@ -152,13 +152,13 @@ def decode(
 
 
 def _decode(
-    data: _typing.Union[bytes, bytearray],
+    data: _t.Union[bytes, bytearray],
     ofst: int,
     ofst_limit: int,
-    dec: _typing.Dict[str, _typing.Any],
+    dec: _t.Dict[str, _t.Any],
     flatten: bool,
     simple: bool,
-    convert: _typing.Callable[[str, _typing.Union[bytes, bytearray]], _S],
+    convert: _t.Callable[[str, _t.Union[bytes, bytearray]], _S],
 ) -> int:
     while ofst < ofst_limit:
         # Determine tag name length.
@@ -173,7 +173,7 @@ def _decode(
                 tag_name_len += 1
         except IndexError:
             raise DecodeError(
-                f"Tag malformed, expecting more data",
+                "Tag malformed, expecting more data",
                 data[ofst : ofst + tag_name_len].hex().upper(),
                 ofst,
                 dec,
@@ -182,7 +182,7 @@ def _decode(
         # Check that tag name falls within parent tag
         if ofst + tag_name_len > ofst_limit:
             raise DecodeError(
-                f"Tag malformed, expecting more data",
+                "Tag malformed, expecting more data",
                 data[ofst : min(ofst + tag_name_len, ofst_limit)].hex().upper(),
                 ofst,
                 dec,
@@ -251,9 +251,9 @@ def _decode(
 
 
 def encode(
-    tlv: _typing.Mapping[str, _typing.Any],
+    tlv: _t.Mapping[str, _t.Any],
     *,
-    simple: _typing.Optional[bool] = None,
+    simple: _t.Optional[bool] = None,
 ) -> bytes:
     r"""Encode TLV data.
 
@@ -297,7 +297,7 @@ def encode(
     return bytes(_encode(tlv, simple))
 
 
-def _encode(tlv: _typing.Mapping[str, _typing.Any], simple: bool) -> bytearray:
+def _encode(tlv: _t.Mapping[str, _t.Any], simple: bool) -> bytearray:
     data = bytearray()
     for tag_s, value in tlv.items():
         # Tag
@@ -318,16 +318,16 @@ def _encode(tlv: _typing.Mapping[str, _typing.Any], simple: bool) -> bytearray:
                 tag_name_len += 1
         except IndexError:
             raise EncodeError(
-                f"Invalid tag format, expecting more data", tag_s
+                "Invalid tag format, expecting more data", tag_s
             ) from None
 
         if len(tag) != tag_name_len:
-            raise EncodeError(f"Invalid tag format, extra data", tag_s)
+            raise EncodeError("Invalid tag format, extra data", tag_s)
 
         # Value
         # Constructed
         if bool(tag[0] & 0b00100000):
-            if not isinstance(value, _typing.Mapping):
+            if not isinstance(value, _t.Mapping):
                 raise EncodeError(
                     f"Invalid value type ({value.__class__.__name__}) "
                     "for a constructed tag, expecting a dict",

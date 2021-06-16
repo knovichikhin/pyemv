@@ -12,7 +12,7 @@ on:
         description: Git Ref (Optional)
         required: false
       upload-codecov:
-        description: Upload code coverrage?
+        description: Upload code coverage?
         required: false
         default: 'yes'
 
@@ -51,7 +51,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
-        if: github.event.inputs.upload-codecov == 'yes'
+        if: ${{ github.event.inputs.upload-codecov }} == 'yes'
         with:
           files: ./coverage.xml
           flags: ubuntu-latest, ${{ matrix.python-version }}

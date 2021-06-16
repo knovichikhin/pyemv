@@ -27,6 +27,7 @@ PyEMV Modules
   such as appropriate key derivation, cryptogram generation and script formatting
   for each supported CVN.
 - cvv - Support for dynamic card verification, such as CVC3.
+- tlv - TLV encoder and decoder.
 
 Key Derivation
 --------------
@@ -183,6 +184,20 @@ generates a new CVV for each transaction.
     >>> un = bytes.fromhex('00000899')
     >>> generate_cvc3(icc_cvc3, track2, atc, un)
     '29488'
+
+TLV Encoder & Decoder
+---------------------
+
+Use TLV encoder/decoder to disassemble and assemble tag-length-value EMV data.
+
+.. code-block:: python
+
+    >>> import pyemv
+    >>> tlv_data = bytes.fromhex("9C0101E0055F2A0202089F0200")
+    >>> pyemv.tlv.decode(tlv_data, convert=lambda t, v: v.hex().upper())
+    {'9C': '01', 'E0': {'5F2A': '0208'}, '9F02': ''}
+    >>> pyemv.tlv.encode({'9C': '01', 'E0': {'5F2A': '0208'}, '9F02': ''}).hex().upper()
+    '9C0101E0055F2A0202089F0200'
 
 Contribute
 ----------

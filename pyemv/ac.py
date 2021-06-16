@@ -32,6 +32,7 @@ def generate_ac(
 ) -> bytes:
     r"""First and second AC Generation using 8-byte block chiper
     Triple DES with ISO/IEC 9797-1 Algorithm 3. Same process for
+
         - Authorisation Request Cryptogram (ARQC)
         - Transaction Cryptogram (TC)
         - Application Authentication Cryptogram (AAC)
@@ -135,9 +136,8 @@ def generate_ac(
 
     if not isinstance(padding_type, PaddingType):
         raise TypeError(
-            "Padding type must be PaddingType Enum, not {}".format(
-                padding_type.__class__.__name__
-            )
+            "Padding type must be PaddingType Enum, "
+            f"not {padding_type.__class__.__name__}"
         )
 
     return _mac_iso9797_3(sk_ac[:8], sk_ac[-8:], data, padding_type.value, length)

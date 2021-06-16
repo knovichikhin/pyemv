@@ -189,7 +189,7 @@ class VisaCVN10(object):
         return _ac.generate_arpc_1(self._derive_sk_ac_none(), tag_9f26, arpc_rc)
 
     def _derive_sk_sm_visa(self, icc_mk_sm: bytes, tag_9f36: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Visa method
+        """Derive Secure Messaging Session Key using Visa method.
 
         Parameters
         ----------
@@ -214,7 +214,7 @@ class VisaCVN10(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -239,7 +239,7 @@ class VisaCVN10(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f36: bytes) -> bytes:
-        """Command Data Encryption for Secure Messaging Confidentiality
+        """Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -484,7 +484,7 @@ class VisaCVN18(object):
         )
 
     def _derive_sk_sm_visa(self, icc_mk_sm: bytes, tag_9f36: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Visa method
+        """Derive Secure Messaging Session Key using Visa method.
 
         Parameters
         ----------
@@ -509,7 +509,7 @@ class VisaCVN18(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -535,7 +535,7 @@ class VisaCVN18(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f36: bytes) -> bytes:
-        """Command Data Encryption for Secure Messaging Confidentiality
+        """Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -781,7 +781,7 @@ class InteracCVN133(object):
         )
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Common method
+        """Derive Secure Messaging Session Key using Common method.
 
         Parameters
         ----------
@@ -805,7 +805,7 @@ class InteracCVN133(object):
         tag_9f26: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -829,7 +829,7 @@ class InteracCVN133(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f26: bytes) -> bytes:
-        """Command Data Encryption for Secure Messaging Confidentiality
+        """Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -1065,7 +1065,7 @@ class MasterCardCVN16(object):
         return _ac.generate_arpc_1(self._derive_sk_arpc_none(), tag_9f26, arpc_rc)
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Common method
+        """Derive Secure Messaging Session Key using Common method.
 
         Parameters
         ----------
@@ -1090,7 +1090,7 @@ class MasterCardCVN16(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -1121,7 +1121,7 @@ class MasterCardCVN16(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f26: bytes) -> bytes:
-        r"""Command Data Encryption for Secure Messaging Confidentiality
+        r"""Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -1385,7 +1385,7 @@ class MasterCardCVN17(object):
         return _ac.generate_arpc_1(self._derive_sk_arpc_none(), tag_9f26, arpc_rc)
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Common method
+        """Derive Secure Messaging Session Key using Common method.
 
         Parameters
         ----------
@@ -1410,7 +1410,7 @@ class MasterCardCVN17(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -1441,7 +1441,7 @@ class MasterCardCVN17(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f26: bytes) -> bytes:
-        r"""Command Data Encryption for Secure Messaging Confidentiality
+        r"""Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -1684,7 +1684,7 @@ class MasterCardCVN20(object):
         )
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Common method
+        """Derive Secure Messaging Session Key using Common method.
 
         Parameters
         ----------
@@ -1709,7 +1709,7 @@ class MasterCardCVN20(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -1740,7 +1740,7 @@ class MasterCardCVN20(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f26: bytes) -> bytes:
-        r"""Command Data Encryption for Secure Messaging Confidentiality
+        r"""Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------
@@ -1994,7 +1994,7 @@ class MasterCardCVN21(object):
         )
 
     def _derive_sk_sm_common(self, icc_mk_sm: bytes, tag_9f26: bytes) -> bytes:
-        """Derive Secure Messaging Session Key using Common method
+        """Derive Secure Messaging Session Key using Common method.
 
         Parameters
         ----------
@@ -2019,7 +2019,7 @@ class MasterCardCVN21(object):
         tag_9f36: bytes,
         command_data: bytes = b"",
     ) -> bytes:
-        r"""Message Authentication Code (MAC) for Secure Messaging Integrity
+        r"""Message Authentication Code (MAC) for Secure Messaging Integrity.
 
         Parameters
         ----------
@@ -2050,7 +2050,7 @@ class MasterCardCVN21(object):
         )
 
     def encrypt_command_data(self, command_data: bytes, tag_9f26: bytes) -> bytes:
-        r"""Command Data Encryption for Secure Messaging Confidentiality
+        r"""Command Data Encryption for Secure Messaging Confidentiality.
 
         Parameters
         ----------

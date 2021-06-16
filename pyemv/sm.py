@@ -24,7 +24,7 @@ __all__ = [
 def generate_command_mac(
     sk_smi: bytes, command: bytes, length: _typing.Optional[int] = None
 ) -> bytes:
-    r"""Message Authentication Code (MAC) for Issuer Script Integrity
+    r"""Message Authentication Code (MAC) for Issuer Script Integrity.
 
     Parameters
     ----------
@@ -190,9 +190,8 @@ def encrypt_command_data(
         )
 
     raise TypeError(
-        "Encryption type must be EncryptionType Enum, not {}".format(
-            encryption_type.__class__.__name__
-        )
+        "Encryption type must be EncryptionType Enum, "
+        f"not {encryption_type.__class__.__name__}"
     )
 
 

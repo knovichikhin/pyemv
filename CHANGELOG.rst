@@ -1,4 +1,4 @@
-1.4.0 - 2021-06-15
+1.4.0 - 2021-06-17
 ------------------
 - Added TLV encoder/decoder. See ``pyemv.tlv`` module.
 - Dropped Python 3.5 support.

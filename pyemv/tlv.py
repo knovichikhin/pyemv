@@ -1,3 +1,24 @@
+r"""Use TLV decoder and encoder to disassemble and assemble tag-length-value EMV data.
+
+By default TLV data is broken down into bytes:
+
+    >>> import pyemv
+    >>> tlv_data = bytes.fromhex("9C0101E0055F2A0202089F0200")
+    >>> pyemv.tlv.decode(tlv_data)
+    {'9C': b'\x01', 'E0': {'5F2A': b'\x02\x08'}, '9F02': b''}
+    >>> pyemv.tlv.encode({'9C': b'\x01', 'E0': {'5F2A': b'\x02\x08'}, '9F02': b''}).hex().upper()
+    '9C0101E0055F2A0202089F0200'
+
+It can also be converted to strings (among other things):
+
+    >>> import pyemv
+    >>> tlv_data = bytes.fromhex("9C0101E0055F2A0202089F0200")
+    >>> pyemv.tlv.decode(tlv_data, convert=lambda t, v: v.hex().upper())
+    {'9C': '01', 'E0': {'5F2A': '0208'}, '9F02': ''}
+    >>> pyemv.tlv.encode({'9C': '01', 'E0': {'5F2A': '0208'}, '9F02': ''}).hex().upper()
+    '9C0101E0055F2A0202089F0200'
+"""
+
 import typing as _t
 
 __all__ = ["decode", "DecodeError", "encode", "EncodeError"]

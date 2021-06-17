@@ -181,11 +181,6 @@ generates a new CVV for each transaction.
     >>> generate_cvc3(icc_cvc3, track2, atc, un)
     '29488'
 
-TLV Decoder & Encoder
----------------------
-
-
-
 Contribute
 ----------
 

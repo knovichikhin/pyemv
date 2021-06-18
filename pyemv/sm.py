@@ -2,6 +2,26 @@ r"""The objectives of secure messaging are to ensure data confidentiality, data
 integrity, and authentication of the sender. Data integrity and issuer
 authentication are achieved using a MAC. Data confidentiality is achieved
 using encipherment of the data field.
+
+Secure Messaging Integrity (MAC):
+
+    >>> import pyemv
+    >>> mac = pyemv.sm.generate_command_mac(
+    ...     sk_smi=bytes.fromhex('0123456789ABCDEFFEDCBA9876543210'),
+    ...     command=bytes.fromhex('8424000008'))
+    >>> mac.hex().upper()
+    '0BFFF5DF3FAA24E1'
+
+Secure Messaging Confidentiality:
+
+    >>> import pyemv
+    >>> pin_block=pyemv.sm.format_iso9564_2_pin_block('9999')
+    >>> encrypted_pin = pyemv.sm.encrypt_command_data(
+    ...     sk_smc=bytes.fromhex('0123456789ABCDEFFEDCBA9876543210'),
+    ...     command_data=pin_block,
+    ...     encryption_type=pyemv.sm.EncryptionType.EMV)
+    >>> encrypted_pin.hex().upper()
+    '5A862D1381CCB94822CFDD706A376178'
 """
 
 import binascii as _binascii

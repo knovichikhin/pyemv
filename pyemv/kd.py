@@ -1,5 +1,14 @@
-r"""Cryptographic key derivation functions for the
-ICC Master Keys and ICC Session Keys.
+r"""Cryptographic key derivation functions for the ICC Master Keys and ICC Session Keys.
+
+ICC Master Key derivation method A:
+
+    >>> import pyemv
+    >>> iss_mk = bytes.fromhex('0123456789ABCDEFFEDCBA9876543210')
+    >>> pan = '99012345678901234'
+    >>> psn = '45'
+    >>> icc_mk = pyemv.kd.derive_icc_mk_a(iss_mk, pan, psn)
+    >>> icc_mk.hex().upper()
+    '67F8292358083E5EA7AB7FDA58D53B6B'
 """
 
 import binascii as _binascii

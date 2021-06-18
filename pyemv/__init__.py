@@ -7,11 +7,12 @@ r"""PyEMV package provides methods to generate
 
 PyEMV consists of the following modules:
 
-    - kd - Key Derivation support for ICC master keys and session keys
-    - ac - Application Cryptogram support for ARQC, AAC, TC, and ARPC
-    - sm - Secure Messaging support for script command integrity
-      and confidentiality. It also provides support for PIN blocks.
-    - cvn - Putting it all together for various Cryptogram Version Numbers
+    - kd - Key Derivation support for ICC master keys and session keys.
+    - ac - Application Cryptogram support for ARQC, AAC, TC, and ARPC.
+    - sm - Secure Messaging support for script command integrity and confidentiality.
+    - cvn - Putting it all together for various Cryptogram Version Numbers.
+    - cvv - Support for dynamic card verification, such as CVC3.
+    - tlv - TLV encoder and decoder.
 
 Key Derivation
 ~~~~~~~~~~~~~~
@@ -147,7 +148,7 @@ generates a new CVV for each transaction.
     '29488'
 """
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 __author__ = "Konstantin Novichikhin <konstantin.novichikhin@gmail.com>"
 
-from pyemv import ac, cvn, cvv, kd, mac, sm, tools
+from pyemv import ac, cvn, cvv, kd, mac, sm, tlv, tools

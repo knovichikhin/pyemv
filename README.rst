@@ -5,10 +5,10 @@ PyEMV
 
 ``PyEMV`` package provides methods to generate
 
-- Application Cryptograms (TC, ARQC, or AAC) that's used to verify ICC
-- Authorization Response Cryptogram (ARPC) that's used to verify card issuer
-- Secure Messaging Integrity and Confidentiality that's used by the issuer to update values on the ICC
-- Dynamic Card Verification Values
+- Application Cryptograms (TC, ARQC, or AAC) that's used to verify ICC.
+- Authorization Response Cryptogram (ARPC) that's used to verify card issuer.
+- Secure Messaging Integrity and Confidentiality that's used by the issuer to update values on the ICC.
+- Dynamic Card Verification Values.
 
 Install:
 
@@ -18,15 +18,12 @@ Install:
 
 PyEMV Modules
 -------------
-- kd - Key Derivation support for ICC master keys and session keys
-- ac - Application Cryptogram support for ARQC, AAC, TC, and
-  ARPC
-- sm - Secure Messaging support for script command integrity
-  and confidentiality. It also provides support for PIN blocks.
-- cvn - Putting it all together for various Cryptogram Version Numbers,
-  such as appropriate key derivation, cryptogram generation and script formatting
-  for each supported CVN.
+- kd - Key Derivation support for ICC master keys and session keys.
+- ac - Application Cryptogram support for ARQC, AAC, TC, and ARPC.
+- sm - Secure Messaging support for script command integrity and confidentiality.
+- cvn - Putting it all together for various Cryptogram Version Numbers.
 - cvv - Support for dynamic card verification, such as CVC3.
+- tlv - TLV encoder and decoder.
 
 Key Derivation
 --------------

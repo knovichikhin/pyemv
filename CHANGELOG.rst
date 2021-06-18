@@ -1,3 +1,8 @@
+1.4.0 - 2021-06-17
+------------------
+- Added TLV encoder/decoder. See ``pyemv.tlv`` module.
+- Dropped Python 3.5 support.
+
 1.3.0 - 2020-12-07
 ------------------
 - Added MasterCard CVC3 support

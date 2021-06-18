@@ -41,5 +41,5 @@ if __name__ == "__main__":
         ],
         classifiers=classifiers,
         python_requires=">=3.6",
-        keywords="emv arqc arpc tc aac smi smc cvc3",
+        keywords="emv arqc arpc tc aac smi smc cvc3 tlv",
     )

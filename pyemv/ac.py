@@ -32,7 +32,7 @@ from enum import Enum as _Enum
 from pyemv.mac import mac_iso9797_3 as _mac_iso9797_3
 from pyemv.tools import encrypt_tdes_cbc as _encrypt_tdes_cbc
 from pyemv.tools import xor as _xor
-
+ 
 __all__ = [
     "PaddingType",
     "generate_ac",

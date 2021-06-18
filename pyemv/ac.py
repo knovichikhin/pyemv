@@ -34,7 +34,7 @@ from pyemv.tools import encrypt_tdes_cbc as _encrypt_tdes_cbc
 from pyemv.tools import xor as _xor
 
 __all__ = [
-    "PaddingType",
+    "PaddingTyp",
     "generate_ac",
     "generate_arpc_1",
     "generate_arpc_2",

@@ -25,7 +25,7 @@ ARPC:
     >>> arpc.hex().upper()
     'CB56FA40'
 """
-
+ab=''
 import typing as _typing
 from enum import Enum as _Enum
 

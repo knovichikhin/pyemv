@@ -51,7 +51,7 @@ def generate_ac(
     data: bytes,
     padding_type: _typing.Optional[PaddingType] = None,
     length: _typing.Optional[int] = None,
-):
+) -> bytes:
     r"""First and second AC Generation using 8-byte block chiper
     Triple DES with ISO/IEC 9797-1 Algorithm 3. Same process for
 

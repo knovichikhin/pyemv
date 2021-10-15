@@ -202,6 +202,115 @@ def test_visa_cvn18(
 
 
 @pytest.mark.parametrize(
+    ["pan", "psn", "pin", "current_pin"],
+    [
+        (b"1234567890123456", b"00", b"9999", b"8888"),
+        (b"1234567890123456", "00", b"9999", "8888"),
+        ("1234567890123456", b"00", "9999", b"8888"),
+        ("1234567890123456", "00", "9999", "8888"),
+    ],
+)
+def test_visa_cvn22(
+    pan: Union[bytes, str],
+    psn: Union[bytes, str],
+    pin: Union[bytes, str],
+    current_pin: Union[bytes, str],
+) -> None:
+    """Visa CVN 22"""
+    cvn22 = cvn.VisaCVN22(
+        iss_mk_ac=bytes.fromhex("0123456789ABCDEFFEDCBA9876543210"),
+        iss_mk_smi=bytes.fromhex("FEDCBA98765432100123456789ABCDEF"),
+        iss_mk_smc=bytes.fromhex("89ABCDEF0123456776543210FEDCBA98"),
+        pan=pan,
+        psn=psn,
+    )
+
+    # Check ICC Master Keys
+    assert key_check_digits(cvn22.icc_mk_ac).hex().upper() == "BAB0"
+    assert key_check_digits(cvn22.icc_mk_smi).hex().upper() == "F010"
+    assert key_check_digits(cvn22.icc_mk_smc).hex().upper() == "B154"
+
+    # ARQC and its session key
+    atc = bytes.fromhex("001C")
+    arqc = cvn22.generate_ac(
+        tag_9f02=bytes.fromhex("000000004000"),
+        tag_9f03=bytes.fromhex("000000000000"),
+        tag_9f1a=bytes.fromhex("0124"),
+        tag_95=bytes.fromhex("8000048000"),
+        tag_5f2a=bytes.fromhex("0124"),
+        tag_9a=bytes.fromhex("191105"),
+        tag_9c=bytes.fromhex("01"),
+        tag_9f37=bytes.fromhex("52BF4585"),
+        tag_82=bytes.fromhex("1800"),
+        tag_9f36=atc,
+        tag_9f10=bytes.fromhex("06011203A0B800"),
+    )
+    assert arqc.hex().upper() == "7A788EA6B8A3E733"
+    assert key_check_digits(cvn22._derive_sk_ac_common(atc)).hex().upper() == "22C8"
+
+    # ARPC and its session key
+    arpc = cvn22.generate_arpc(
+        tag_9f26=arqc, tag_9f36=atc, csu=bytes.fromhex("00000000")
+    )
+    assert arpc.hex().upper() == "9AF514C1"
+    assert key_check_digits(cvn22._derive_sk_ac_common(atc)).hex().upper() == "22C8"
+
+    # MAC application unblock command and its session key
+    mac = cvn22.generate_command_mac(
+        bytes.fromhex("8418000008"),
+        tag_9f26=arqc,
+        tag_9f36=atc,
+    )
+    assert mac.hex().upper() == "A4805748F846D851"
+    assert (
+        key_check_digits(cvn22._derive_sk_sm_common(cvn22.icc_mk_smi, arqc))
+        .hex()
+        .upper()
+        == "7A15"
+    )
+
+    # PIN change without current PIN and its session keys
+    pin_command = cvn22.generate_pin_change_command(pin, tag_9f26=arqc, tag_9f36=atc)
+    assert (
+        pin_command.hex().upper()
+        == "84240002181B2943BED3D298F9C75848D17317CD1D25B70F7E26613E5F"
+    )
+    assert (
+        key_check_digits(cvn22._derive_sk_sm_common(cvn22.icc_mk_smc, arqc))
+        .hex()
+        .upper()
+        == "B9FB"
+    )
+    assert (
+        key_check_digits(cvn22._derive_sk_sm_common(cvn22.icc_mk_smi, arqc))
+        .hex()
+        .upper()
+        == "7A15"
+    )
+
+    # PIN change with current PIN and its session keys
+    pin_command = cvn22.generate_pin_change_command(
+        pin, tag_9f26=arqc, tag_9f36=atc, current_pin=current_pin
+    )
+    assert (
+        pin_command.hex().upper()
+        == "8424000118AD6CF0C44DD96B7323A1B51B694E99295A640C9E585FF059"
+    )
+    assert (
+        key_check_digits(cvn22._derive_sk_sm_common(cvn22.icc_mk_smc, arqc))
+        .hex()
+        .upper()
+        == "B9FB"
+    )
+    assert (
+        key_check_digits(cvn22._derive_sk_sm_common(cvn22.icc_mk_smi, arqc))
+        .hex()
+        .upper()
+        == "7A15"
+    )
+
+
+@pytest.mark.parametrize(
     ["pan", "psn", "pin"],
     [
         (b"1234567890123456", b"00", b"9999"),

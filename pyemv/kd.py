@@ -22,6 +22,7 @@ __all__ = [
     "derive_icc_mk_b",
     "derive_common_sk",
     "derive_visa_sm_sk",
+    "derive_emv2000_tree_sk",
 ]
 
 
@@ -304,3 +305,145 @@ def derive_visa_sm_sk(icc_mk: bytes, atc: bytes) -> bytes:
     sk_b = _tools.xor(r, icc_mk[8:])
 
     return _tools.adjust_key_parity(sk_a + sk_b)
+
+
+def derive_emv2000_tree_sk(
+    icc_mk: bytes,
+    atc: bytes,
+    height: int = 8,
+    branch_factor: int = 4,
+    iv: bytes = b"\x00" * 16,
+) -> bytes:
+    r"""EMV2000-Tree Session Key Derivation.
+
+    Parameters
+    ----------
+    icc_mk : bytes
+        Binary ICC Master Key to derive session key from.
+        Has to be a valid DES key.
+    atc : bytes
+        Binary data from tag 9F36 (Application Transaction Counter).
+    height : int
+        Height value used for EMV-Tree derivation. Height controls
+        the number of levels of intermediate keys in the tree
+        excluding the base level. Set to either 8 or 16.
+        Defaults to 8.
+    branch_factor : int
+        Branch factor value used for EMV-Tree derivation. Specifies byte
+        location of the key to XOR with ATC. 0 means the left-most byte.
+        7 means the right-most byte. Defaults to 4.
+    iv : bytes
+        16-byte binary initialization vector used for EMV-Tree derivation.
+        Defaults to 0s.
+
+    Returns
+    -------
+    sk : bytes
+        Binary 16-byte Session Key.
+
+    Raises
+    ------
+    ValueError
+        ICC Master Key must be a double length DES key
+        ATC value must be 2 bytes long
+        Height value must be 8 or 16
+        Index value must be in the range of 0 and 7
+        Initialization vector value must be 8 bytes long
+        ATC exceeds maximum number of session keys available
+
+    Notes
+    -----
+    For more information see:
+        - EMV 4.1 Book 2 Annex A 1.3 Session Key Derivation
+        - EMV 4.1 Book 2 Annex A 1.3.1 Description
+        - EMV 4.1 Book 2 Annex A 1.3.2 Implementation
+
+    This method was replaced by common session key derivation in 2005
+    and should not be used for new development.
+    See EMVCo specification update bulletin 46 (SU-46).
+
+    Examples
+    --------
+    >>> from pyemv import kd
+    >>> mk = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
+    >>> atc = bytes.fromhex("001C")
+    >>> sk = kd.derive_emv2000_tree_sk(mk, atc)
+    >>> sk.hex().upper()
+    'E9FB384AF807B940FEDCEA613461B0C4'
+    """
+    if len(icc_mk) != 16:
+        raise ValueError("ICC Master Key must be a double length DES key")
+
+    if len(atc) != 2:
+        raise ValueError("ATC value must be 2 bytes long")
+
+    if height not in {8, 16}:
+        raise ValueError("Height value must be 8 or 16")
+
+    if branch_factor > 7 or branch_factor < 0:
+        raise ValueError("Branch factor value must be in the range of 0 and 7")
+
+    if len(iv) != 16:
+        raise ValueError("Initialization vector value must be 16 bytes long")
+
+    # GP = Grandparent Key
+    # IK = Intermediate Key
+    # P  = Parent Key
+
+    atc_num = int.from_bytes(atc, "big")
+
+    # ATC must not exceed the maximum number of session keys
+    # (branch_factor ** height) that can be generated/.
+    if atc_num > branch_factor ** height:
+       raise ValueError("ATC exceeds maximum number of session keys available")
+
+    # Φ(X,Y,j) := (DES3(X)[YL ⊕ (j mod b)] || DES3(X)[YR ⊕ (j mod b) ⊕ 'F0'])
+    def derive(x: bytes, y: bytes, j: int) -> bytes:
+        j_mod_b = int.to_bytes(j % branch_factor, 8, "big")
+
+        # (DES3(X)[YL ⊕ (j mod b)]
+        l_data = _tools.xor(y[:8], j_mod_b)
+        l = _tools.encrypt_tdes_ecb(x, l_data)
+
+        # DES3(X)[YR ⊕ (j mod b) ⊕ 'F0']
+        r_data = _tools.xor(y[8:], j_mod_b)
+        r_data = _tools.xor(r_data, b"\x00" * 7 + b"\xF0")
+        r = _tools.encrypt_tdes_ecb(x, r_data)
+        return l + r
+
+    # Compute initial tree with icc_mk and iv
+    tree: _typing.List[_typing.List[bytes]] = [[icc_mk], []]
+    max_j = min(atc_num, (branch_factor ** 1) - 1)
+    for j in range(max_j + 1):
+        tree[1].append(derive(
+            tree[0][j // branch_factor],
+            iv,
+            j,
+        ))
+
+    # Continue growing the tree with computed keys
+    for i in range(2, height + 1):
+        max_j = min(atc_num, (branch_factor ** i) - 1)
+        new_level = []
+        for j in range(max_j + 1):
+            new_level.append(derive(
+                tree[i - 1][j // branch_factor],
+                tree[i - 2][j // (branch_factor * branch_factor)],
+                j,
+            ))
+        tree.append(new_level)
+
+    for t in tree:
+        print([i.hex().upper() for i in t])
+
+    sk = _tools.xor(
+        tree[height][atc_num],
+        tree[height - 2][atc_num // (branch_factor * branch_factor)]
+    )
+    return _tools.adjust_key_parity(sk)
+
+
+if __name__ == "__main__":
+    print(derive_emv2000_tree_sk(
+        bytes.fromhex("38CE016813F86BC72634851F25523DF1"), b"\x00\x11", 8, 7
+    ).hex().upper())

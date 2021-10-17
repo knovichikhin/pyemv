@@ -400,13 +400,13 @@ def derive_emv2000_tree_sk(
 
         # (DES3(X)[YL XOR (j mod b)]
         l_data = _tools.xor(y[:8], j_mod_b)
-        l = _tools.encrypt_tdes_ecb(x, l_data)
+        l_data = _tools.encrypt_tdes_ecb(x, l_data)
 
         # DES3(X)[YR XOR (j mod b) XOR 'F0']
         r_data = _tools.xor(y[8:], j_mod_b)
         r_data = _tools.xor(r_data, b"\x00" * 7 + b"\xF0")
-        r = _tools.encrypt_tdes_ecb(x, r_data)
-        return l + r
+        r_data = _tools.encrypt_tdes_ecb(x, r_data)
+        return l_data + r_data
 
     # GP = Grandparent Key
     # IK = Intermediate Key

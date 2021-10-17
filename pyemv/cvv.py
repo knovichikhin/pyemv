@@ -54,7 +54,9 @@ def generate_cvc3(icc_cvc3: bytes, track_template: bytes, atc: bytes, un: bytes)
     ------
     ValueError
         ICC CVC3 key must be a double length DES key
+    ValueError
         ATC value must be 2 bytes long
+    ValueError
         Unpredictable number must be 4 bytes long
 
     Examples

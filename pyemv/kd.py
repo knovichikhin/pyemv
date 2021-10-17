@@ -223,6 +223,7 @@ def derive_common_sk(icc_mk: bytes, r: _typing.Union[bytes, bytearray]) -> bytes
     ------
     ValueError
         ICC Master Key must be a double length DES key
+    ValueError
         Diversification value must be 8 bytes long
 
     Notes
@@ -279,6 +280,7 @@ def derive_visa_sm_sk(icc_mk: bytes, atc: bytes) -> bytes:
     ------
     ValueError
         ICC Master Key must be a double length DES key
+    ValueError
         ATC value must be 2 bytes long
 
     Examples

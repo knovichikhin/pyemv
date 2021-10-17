@@ -242,7 +242,9 @@ def format_vis_pin_block(
     ------
     ValueError
         PIN must be between 4 and 12 digits long
+    ValueError
         Current PIN must be between 4 and 12 digits long
+    ValueError
         ICC Master Key for AC must be a double length DES key
 
     Examples

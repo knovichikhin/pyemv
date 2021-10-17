@@ -1,3 +1,8 @@
+1.5.0 - 2021-10-16
+------------------
+- Added support for Visa CVN 22 in ``pyemv.cvn`` module.
+- Added support for EMV2000-Tree session key derivation in ``pyemv.kd`` module.
+
 1.4.0 - 2021-06-17
 ------------------
 - Added TLV encoder/decoder. See ``pyemv.tlv`` module.

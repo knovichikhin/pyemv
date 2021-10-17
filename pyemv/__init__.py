@@ -25,7 +25,7 @@ For example, ICC Master Key derivation method A:
     '67F8292358083E5EA7AB7FDA58D53B6B'
 """
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 __author__ = "Konstantin Novichikhin <konstantin.novichikhin@gmail.com>"
 
 from pyemv import ac, cvn, cvv, kd, mac, sm, tlv, tools

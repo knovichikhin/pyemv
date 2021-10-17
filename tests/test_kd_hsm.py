@@ -353,3 +353,41 @@ def test_derive_visa_sm_sk() -> None:
     mac = sm.generate_command_mac(sk_sm, command_header + atc + arqc)
 
     assert mac.hex().upper() == "DB56BA60087CEFD3"
+
+
+# fmt: off
+@pytest.mark.parametrize(
+    ["atc", "height", "branch", "iv", "sk"],
+    [
+        # Small ATC
+        ("0000",  8, 4, "00000000000000000000000000000000", "80BF3145AECB948A5201DAB9EF469875"),
+        ("0000",  8, 4, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "DC31BC40B3AB8F73F2E3DA5EBF9DE59B"),
+        ("0000", 16, 2, "00000000000000000000000000000000", "86AD9732D5A192A749ADCE31919DAE8A"),
+        ("0000", 16, 2, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "7C57A15261202A101C6DA29B16672A3E"),
+        # Medium ATC
+        ("00FF",  8, 4, "00000000000000000000000000000000", "981F9D208AE6132CBC8A7C97F42A5445"),
+        ("00FF",  8, 4, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "D579C8A4927589017FA1739B2C853BAD"),
+        ("00FF", 16, 2, "00000000000000000000000000000000", "1F54F492EF104580B0F4B0F8910D0438"),
+        ("00FF", 16, 2, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "2086F81AAB731FF8CED9BF6DA7191CA2"),
+        # Large ATC
+        ("FFFF",  8, 4, "00000000000000000000000000000000", "D93D7A6B70F867615D4AAB79BF235B62"),
+        ("FFFF",  8, 4, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "A10EA78F2F1ACE203B3B402F6EE6CB29"),
+        ("FFFF", 16, 2, "00000000000000000000000000000000", "F83E499EF786C20BC41310A176E3F84F"),
+        ("FFFF", 16, 2, "F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0F0", "73E3B0A1406E5E4908D5804C4970E520"),
+    ],
+)
+# fmt: on
+def test_derive_emv2000_tree_sk(
+    atc: str,
+    height: int,
+    branch: int,
+    iv: str,
+    sk: str,
+) -> None:
+    assert bytes.fromhex(sk) == kd.derive_emv2000_tree_sk(
+        bytes.fromhex("0123456789ABCDEF0123456789ABCDEF"),
+        bytes.fromhex(atc),
+        height,
+        branch,
+        bytes.fromhex(iv),
+    )

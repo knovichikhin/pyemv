@@ -327,14 +327,14 @@ def derive_emv2000_tree_sk(
         Height value used for EMV-Tree derivation. Height controls
         the number of levels of intermediate keys in the tree
         excluding the base level. Set to either 8 or 16.
-        Defaults to 8.
+        The specification recommends value 8. Defaults to 8.
     branch_factor : int
-        Branch factor value used for EMV-Tree derivation. Specifies byte
-        location of the key to XOR with ATC. 0 means the left-most byte.
-        7 means the right-most byte. Defaults to 4.
+        Branch factor value used for EMV-Tree derivation. Branch factor
+        controls number of "child" keys a "parent" key derives.
+        The specification recommends value 4. Defaults to 4.
     iv : bytes
         16-byte binary initialization vector used for EMV-Tree derivation.
-        Defaults to 0s.
+        The specification recommends IV value of zeros. Defaults to 0s.
 
     Returns
     -------
@@ -345,11 +345,12 @@ def derive_emv2000_tree_sk(
     ------
     ValueError
         ICC Master Key must be a double length DES key
+    ValueError
         ATC value must be 2 bytes long
-        Height value must be 8 or 16
-        Index value must be in the range of 0 and 7
-        Initialization vector value must be 8 bytes long
-        ATC exceeds maximum number of session keys available
+    ValueError
+        Initialization vector value must be 16 bytes long
+    ValueError
+        Number of possible session keys must exceed maximum ATC value
 
     Notes
     -----
@@ -362,14 +363,19 @@ def derive_emv2000_tree_sk(
     and should not be used for new development.
     See EMVCo specification update bulletin 46 (SU-46).
 
+    Recommended branch factor and tree height combinations are as follow.
+    Both combinations produce enough session keys for every possible ATC value.
+        - Branch factor 2 and tree height 16
+        - Branch factor 4 and tree height 8
+
     Examples
     --------
     >>> from pyemv import kd
     >>> mk = bytes.fromhex("0123456789ABCDEFFEDCBA9876543210")
     >>> atc = bytes.fromhex("001C")
-    >>> sk = kd.derive_emv2000_tree_sk(mk, atc)
+    >>> sk = kd.derive_emv2000_tree_sk(mk, atc, 8, 4)
     >>> sk.hex().upper()
-    'E9FB384AF807B940FEDCEA613461B0C4'
+    'E5BF6D1067F194B0A89B7F5D83BC64A2'
     """
     if len(icc_mk) != 16:
         raise ValueError("ICC Master Key must be a double length DES key")
@@ -377,73 +383,51 @@ def derive_emv2000_tree_sk(
     if len(atc) != 2:
         raise ValueError("ATC value must be 2 bytes long")
 
-    if height not in {8, 16}:
-        raise ValueError("Height value must be 8 or 16")
-
-    if branch_factor > 7 or branch_factor < 0:
-        raise ValueError("Branch factor value must be in the range of 0 and 7")
-
     if len(iv) != 16:
         raise ValueError("Initialization vector value must be 16 bytes long")
 
-    # GP = Grandparent Key
-    # IK = Intermediate Key
-    # P  = Parent Key
+    # The number of possible session keys (branch_factor ** height)
+    # must exceed the maximum value of the ATC which is 2 ** 16 - 1.
+    if branch_factor ** height < 65535:
+        raise ValueError(
+            "Number of possible session keys must exceed maximum ATC value"
+        )
 
-    atc_num = int.from_bytes(atc, "big")
-
-    # ATC must not exceed the maximum number of session keys
-    # (branch_factor ** height) that can be generated/.
-    if atc_num > branch_factor ** height:
-       raise ValueError("ATC exceeds maximum number of session keys available")
-
-    # Φ(X,Y,j) := (DES3(X)[YL ⊕ (j mod b)] || DES3(X)[YR ⊕ (j mod b) ⊕ 'F0'])
+    # F(X,Y,j) := (DES3(X)[YL XOR (j mod b)] || DES3(X)[YR XOR (j mod b) XOR 'F0'])
     def derive(x: bytes, y: bytes, j: int) -> bytes:
+        """Map two 16-byte numbers X and Y and an integer j onto a 16-byte number."""
         j_mod_b = int.to_bytes(j % branch_factor, 8, "big")
 
-        # (DES3(X)[YL ⊕ (j mod b)]
+        # (DES3(X)[YL XOR (j mod b)]
         l_data = _tools.xor(y[:8], j_mod_b)
         l = _tools.encrypt_tdes_ecb(x, l_data)
 
-        # DES3(X)[YR ⊕ (j mod b) ⊕ 'F0']
+        # DES3(X)[YR XOR (j mod b) XOR 'F0']
         r_data = _tools.xor(y[8:], j_mod_b)
         r_data = _tools.xor(r_data, b"\x00" * 7 + b"\xF0")
         r = _tools.encrypt_tdes_ecb(x, r_data)
         return l + r
 
-    # Compute initial tree with icc_mk and iv
-    tree: _typing.List[_typing.List[bytes]] = [[icc_mk], []]
-    max_j = min(atc_num, (branch_factor ** 1) - 1)
-    for j in range(max_j + 1):
-        tree[1].append(derive(
-            tree[0][j // branch_factor],
-            iv,
-            j,
-        ))
+    # GP = Grandparent Key
+    # IK = Intermediate Key
+    # P  = Parent Key
+    # H  = Height of the tree
+    def walk(j: int, h: int) -> _typing.Tuple[bytes, bytes]:
+        """Returns P and GP"""
+        # Base case: P = ICC MK, GP = IV
+        if h == 0:
+            return icc_mk, iv
+        p, gp = walk(j // branch_factor, h - 1)
+        # Derives an IK from P and GP
+        # IK becomes the new parent and current P becomes the new GP
+        return derive(p, gp, j), p
 
-    # Continue growing the tree with computed keys
-    for i in range(2, height + 1):
-        max_j = min(atc_num, (branch_factor ** i) - 1)
-        new_level = []
-        for j in range(max_j + 1):
-            new_level.append(derive(
-                tree[i - 1][j // branch_factor],
-                tree[i - 2][j // (branch_factor * branch_factor)],
-                j,
-            ))
-        tree.append(new_level)
+    atc_num = int.from_bytes(atc, "big")
 
-    for t in tree:
-        print([i.hex().upper() for i in t])
+    # Derive IKs from the bottom of the tree to the second to last level
+    # because GP from that level is required for SK.
+    p, gp = walk(atc_num // branch_factor, height - 1)
 
-    sk = _tools.xor(
-        tree[height][atc_num],
-        tree[height - 2][atc_num // (branch_factor * branch_factor)]
-    )
+    # Derive SK from a new IK at the tree height XOR'd by GP.
+    sk = _tools.xor(derive(p, gp, atc_num), gp)
     return _tools.adjust_key_parity(sk)
-
-
-if __name__ == "__main__":
-    print(derive_emv2000_tree_sk(
-        bytes.fromhex("38CE016813F86BC72634851F25523DF1"), b"\x00\x11", 8, 7
-    ).hex().upper())

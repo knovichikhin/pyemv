@@ -390,7 +390,7 @@ def derive_emv2000_tree_sk(
 
     # The number of possible session keys (branch_factor ** height)
     # must exceed the maximum value of the ATC which is 2 ** 16 - 1.
-    if branch_factor ** height < 65535:
+    if branch_factor**height < 65535:
         raise ValueError(
             "Number of possible session keys must exceed maximum ATC value"
         )

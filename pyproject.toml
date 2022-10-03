@@ -30,3 +30,9 @@ exclude_lines = [
     "^@.*\\.overload", # Ignore @overload lines
     "pragma: no cover",
 ]
+
+[tool.mypy]
+strict = true
+files = [
+    "pyemv/**/*.py",
+]

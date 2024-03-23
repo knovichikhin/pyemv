@@ -35,3 +35,4 @@ jobs:
           files: ./coverage.xml
           flags: ubuntu-latest, ${{ matrix.python-version }}
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}

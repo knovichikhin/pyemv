@@ -58,7 +58,6 @@ secure messaging in one class per CVN.
     '84240002182DC7A061323BA62472BC5308BD291B5F665B3A927E60661E'
 """
 
-
 import typing as _typing
 
 from pyemv import ac as _ac

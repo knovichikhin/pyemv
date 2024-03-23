@@ -3,7 +3,6 @@ Dynamic Card Verification is used in EMV transactions to
 generate a new CVV for each transaction.
 """
 
-
 from pyemv import mac as _mac
 from pyemv import tools as _tools
 
